@@ -1,0 +1,8 @@
+# Minden szöveges fájl LF sorvéggel kerül a repóba és a munkapéldányba – Windows-os klónozásnál is
+# (a Docker / bash / .env CRLF-fel hibázhat).
+* text=auto eol=lf
+
+*.pdf binary
+*.png binary
+*.jpg binary
+*.ico binary

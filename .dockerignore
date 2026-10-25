@@ -1,0 +1,14 @@
+.env
+.env.*
+!.env.example
+data/
+eval/
+**/node_modules
+frontend/dist
+**/__pycache__
+.git
+# nem kell az image-be: a PDF-ek kötetként csatolódnak, a dokumentáció külön
+hasznalati_utmutatok/
+docs/
+promptfoo/
+bemutato.html

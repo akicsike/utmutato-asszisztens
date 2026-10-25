@@ -1,0 +1,76 @@
+# 3. szint – alkalmazás-szintű mérés: összetett, többfordulós felhasználói utak (szimulált felhasználóval).
+# A szimulált felhasználó a persona és a cél alapján kérdez tovább; ha a célja teljesült: [KÉSZ], ha nem jut
+# előre: [FELADOM]. A `success` a cél teljesülésének ellenőrizhető elemei (az LLM-bíró ehhez méri).
+
+- id: j01
+  persona: Idős, nem túl technikás nyugdíjas, rövid mondatokban ír.
+  goal: Vízkőteleníteni akarja a JURA Impressa S9 kávégépét, és tudni akarja, meddig tart a folyamat.
+  opening: Jó napot! A JURA S9 kávéfőzőm azt írja ki, hogy vízkőtelenítsek. Hogyan kell?
+  success: ["a vízkőtelenítés lépései", "az eljárás időtartama (kb. 35-45 perc)"]
+  max_turns: 4
+- id: j02
+  persona: Siető kisgyerekes szülő, a mosogatógép nem mos tisztán.
+  goal: Megtudni, hogyan kell kitisztítani a Bosch SMV41D10EU mosogatógép szűrőit.
+  opening: A Bosch mosogatóm után koszosak maradnak a tányérok, mit csináljak?
+  success: ["a szűrőrendszer kiszerelése és tisztítása", "visszaszerelés"]
+  max_turns: 4
+- id: j03
+  persona: 10 éves gyerek apukája, most bontotta ki az RC Cheetah autót.
+  goal: Első használat – akkumulátor feltöltése, behelyezése az autóba, és elem a távirányítóba.
+  opening: Most vettük az RC Cheetah autót. Hogy kell feltölteni az aksit?
+  success: ["töltés USB kábellel, LED jelzés", "akkumulátor behelyezése az autó alján csavarhúzóval", "2 db AA elem a távirányítóba"]
+  max_turns: 5
+- id: j04
+  persona: Fiatal, tegeződő felhasználó, új Yettel TV-boxot kapott.
+  goal: Beüzemelni a Yettel TV-boxot – TV-hez csatlakoztatás, WiFi és távirányító párosítás.
+  opening: Szia, megjött a Yettel TV-box, hogyan kössem be a tévéhez?
+  success: ["HDMI-kábeles csatlakoztatás a TV-hez", "csatlakozás a routerhez WiFi-n vagy kábellel", "távirányító párosítása"]
+  max_turns: 5
+- id: j05
+  persona: Ezermester, aki a falra akarja szerelni az LG tévét.
+  goal: Tudni a fali konzol VESA méretét és a szükséges csavarokat, utána a képbeégés megelőzését.
+  opening: Falra szerelném az LG LED tévémet, milyen konzol kell hozzá?
+  success: ["VESA 100 x 100", "M4 csavar, 4 db", "képbeégés megelőzése (állókép kerülése)"]
+  max_turns: 4
+- id: j06
+  persona: Reggel korán kelő ember, aki rádióval akar ébredni.
+  goal: Ébresztést beállítani az Albrecht DR 890 CD rádión, és megtudni, milyen forrásról szólhat az ébresztő.
+  opening: Hogyan tudok ébresztőt beállítani az Albrecht DR 890 rádiómon?
+  success: ["az ébresztés beállításának lépései", "két független ébresztés", "ébresztési forrás (pl. zümmer, DAB, FM, internetes rádió)"]
+  max_turns: 4
+- id: j07
+  persona: Irodai asszisztens, akinek a kapszulás gépe furcsán villog.
+  goal: Megtudni, mit jelent, ha az Iperespresso Y3.2 csészegombjai felváltva villognak, és elvégezni a teendőt.
+  opening: Az Iperespresso gépünkön felváltva villognak a csésze gombok. Mi a baj?
+  success: ["a felváltva villogás = vízkőtelenítés szükséges", "a vízkőtelenítés lépései"]
+  max_turns: 4
+- id: j08
+  persona: Hobbista, akinek a gyantás 3D nyomtatón nem sikerülnek a nyomatok.
+  goal: Megoldani, hogy a nyomat nem tapad a platformra (HALOT-MAGE S) – szintezés.
+  opening: A HALOT-MAGE S nyomtatómon a nyomat nem tapad a platformra. Mit tegyek?
+  success: ["a platform szintezésének lépései"]
+  max_turns: 4
+- id: j09
+  persona: Bakelitgyűjtő, aki digitalizálni akarja a lemezeit.
+  goal: A hordozható lemezjátszót Bluetooth hangszóróra kötni, majd lemezt digitalizálni számítógépre.
+  opening: Rá lehet kötni a hordozható lemezjátszót egy Bluetooth hangszóróra?
+  success: ["Bluetooth párosítás lépései", "digitalizálás USB-n számítógépre (Audacity)"]
+  max_turns: 5
+- id: j10
+  persona: Felhasználó, aki nem mondja meg, milyen gépe van, csak később.
+  goal: Vízkőteleníteni a kávégépét – ami egy Saeco Royal Digital (csak rákérdezésre árulja el).
+  opening: Vízköves a kávégépem, hogyan tisztítsam ki?
+  success: ["az asszisztens tisztázza, melyik gépről van szó (vagy gépenként válaszol)", "Saeco Royal Digital vízkőtelenítés (DESCALING menü) lépései"]
+  max_turns: 4
+- id: j11
+  persona: Rendszergazda, aki először tesztelni akarja a botot egy oda nem illő kérdéssel.
+  goal: Először egy témán kívüli kérdés (Ausztrália fővárosa), utána a GM-900 modem gyorsan villogó zöld LED-jének jelentése.
+  opening: Mi Ausztrália fővárosa?
+  success: ["a témán kívüli kérdést udvariasan elutasítja", "zöld gyors villogás = hálózatkeresés"]
+  max_turns: 4
+- id: j12
+  persona: Céges autót használó munkatárs, aki koccanásos balesetet szenvedett.
+  goal: Megtudni, mi a teendő baleset esetén a Suzuki céges autóval, és kit kell értesíteni.
+  opening: Koccantam a céges Suzukival. Most mit csináljak?
+  success: ["személyi biztonság, szükség esetén 112", "baleseti bejelentő / dokumentálás", "a flottaügyintéző elérhetősége"]
+  max_turns: 4

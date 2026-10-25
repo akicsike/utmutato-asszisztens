@@ -1,0 +1,791 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Admin útmutató</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<style>
+:root{
+  color-scheme: light;
+  --bg:#f6f7fb; --panel:#ffffff; --panel-2:#f1f4f9; --border:#e3e7ef; --text:#141a26; --text-2:#46506a; --muted:#7a8399;
+  --accent:#2a78d6; --accent-2:#6250d6; --accent-soft:rgba(42,120,214,.10); --accent-ink:#1c5cab;
+  --ok:#0f8a3c; --ok-soft:rgba(15,138,60,.10); --warn:#b45309; --warn-soft:rgba(234,161,0,.14); --bad:#c0362c; --bad-soft:rgba(208,59,59,.10);
+  --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a; --s4:#eda100; --s5:#e87ba4;
+  --code-bg:#0f1420; --shadow:0 1px 2px rgba(16,24,40,.05),0 6px 24px rgba(16,24,40,.06);
+  --radius:14px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme: dark;
+    --bg:#0d1017; --panel:#151a24; --panel-2:#1c2230; --border:#2a3142; --text:#e8ebf2; --text-2:#b9c0d0; --muted:#8a93a8;
+    --accent:#5b9cf0; --accent-2:#9085e9; --accent-soft:rgba(91,156,240,.14); --accent-ink:#9cc3f7;
+    --ok:#3ccf6e; --ok-soft:rgba(60,207,110,.12); --warn:#f0b43a; --warn-soft:rgba(240,180,58,.12); --bad:#ef6b62; --bad-soft:rgba(239,107,98,.12);
+    --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181;
+    --code-bg:#0a0d14; --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 28px rgba(0,0,0,.35);
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --bg:#0d1017; --panel:#151a24; --panel-2:#1c2230; --border:#2a3142; --text:#e8ebf2; --text-2:#b9c0d0; --muted:#8a93a8;
+  --accent:#5b9cf0; --accent-2:#9085e9; --accent-soft:rgba(91,156,240,.14); --accent-ink:#9cc3f7;
+  --ok:#3ccf6e; --ok-soft:rgba(60,207,110,.12); --warn:#f0b43a; --warn-soft:rgba(240,180,58,.12); --bad:#ef6b62; --bad-soft:rgba(239,107,98,.12);
+  --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181;
+  --code-bg:#0a0d14; --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 28px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:84px}
+body{margin:0;background:var(--bg);color:var(--text);font:15.5px/1.65 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+a{color:var(--accent)}
+code{font-family:ui-monospace,"Cascadia Code",Consolas,monospace;font-size:.88em;background:var(--panel-2);border:1px solid var(--border);border-radius:6px;padding:1px 6px}
+#progress{position:fixed;top:0;left:0;height:3px;width:0;background:linear-gradient(90deg,var(--accent),var(--accent-2));z-index:60;transition:width .1s}
+
+/* ---------------- váz */
+.layout{display:flex;min-height:100vh}
+aside.side{position:sticky;top:0;height:100vh;width:290px;flex-shrink:0;background:var(--panel);border-right:1px solid var(--border);display:flex;flex-direction:column;z-index:40}
+.side-head{padding:18px 18px 12px;border-bottom:1px solid var(--border)}
+.side-brand{display:flex;gap:10px;align-items:center;font-weight:750;font-size:15px;line-height:1.25}
+.side-logo{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;color:#fff;background:linear-gradient(135deg,var(--accent),var(--accent-2));flex-shrink:0;font-size:17px}
+.side-sub{font-size:12px;color:var(--muted);margin-top:2px;font-weight:500}
+.side-tools{display:flex;gap:6px;margin-top:12px}
+.side-search{flex:1;min-width:0;border:1px solid var(--border);background:var(--panel-2);color:var(--text);border-radius:9px;padding:7px 10px;font:inherit;font-size:13px}
+.icon-btn{border:1px solid var(--border);background:var(--panel-2);color:var(--text-2);border-radius:9px;width:36px;cursor:pointer;font-size:15px}
+.icon-btn:hover{color:var(--accent);border-color:var(--accent)}
+nav.toc{flex:1;overflow:auto;padding:10px 10px 30px}
+nav.toc .grp{font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin:16px 10px 6px;font-weight:650}
+nav.toc a{display:flex;gap:9px;align-items:baseline;padding:7px 10px;border-radius:9px;color:var(--text-2);text-decoration:none;font-size:14px;line-height:1.35}
+nav.toc a .n{font-variant-numeric:tabular-nums;color:var(--muted);font-size:12px;min-width:18px}
+nav.toc a .t{font-size:11px;color:var(--muted);margin-left:auto;font-variant-numeric:tabular-nums;white-space:nowrap}
+nav.toc a:hover{background:var(--panel-2);color:var(--text)}
+nav.toc a.active{background:var(--accent-soft);color:var(--accent-ink);font-weight:650}
+nav.toc a.active .n{color:var(--accent)}
+nav.toc a.hidden{display:none}
+.side-foot{padding:12px 18px;border-top:1px solid var(--border);font-size:12px;color:var(--muted)}
+main{flex:1;min-width:0;padding:0 0 120px}
+.wrap{max-width:980px;margin:0 auto;padding:0 32px}
+.menu-btn{display:none}
+@media (max-width:960px){
+  aside.side{position:fixed;left:0;top:0;transform:translateX(-100%);transition:transform .25s;box-shadow:var(--shadow)}
+  body.nav-open aside.side{transform:none}
+  .menu-btn{display:grid;place-items:center;position:fixed;top:12px;left:12px;z-index:50;width:42px;height:42px;border-radius:12px;background:var(--panel);border:1px solid var(--border);box-shadow:var(--shadow);font-size:18px;cursor:pointer;color:var(--text)}
+  .wrap{padding:0 16px}
+}
+
+/* ---------------- fejléc (hős) */
+.hero{position:relative;overflow:hidden;border-bottom:1px solid var(--border);background:radial-gradient(1200px 400px at 80% -10%,var(--accent-soft),transparent),radial-gradient(800px 300px at 0% 120%,rgba(98,80,214,.12),transparent),var(--panel)}
+.hero canvas{position:absolute;inset:0;width:100%;height:100%;opacity:.9}
+.hero .wrap{position:relative;padding-top:64px;padding-bottom:46px}
+.eyebrow{display:inline-flex;gap:8px;align-items:center;font-size:12px;font-weight:650;letter-spacing:.06em;text-transform:uppercase;color:var(--accent-ink);background:var(--accent-soft);border-radius:999px;padding:4px 12px}
+.hero h1{font-size:clamp(28px,4vw,44px);line-height:1.12;margin:14px 0 10px;letter-spacing:-.02em}
+.hero p.lead{font-size:17px;color:var(--text-2);max-width:680px;margin:0}
+.hero-badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.badge{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;background:var(--panel);border:1px solid var(--border);border-radius:999px;padding:4px 11px;color:var(--text-2)}
+
+/* ---------------- szakaszok */
+section[data-nav]{padding-top:44px}
+section h2{font-size:25px;letter-spacing:-.01em;margin:0 0 6px;display:flex;align-items:center;gap:12px}
+section h2 .num{display:grid;place-items:center;width:34px;height:34px;border-radius:10px;background:var(--accent-soft);color:var(--accent-ink);font-size:15px;font-weight:750;flex-shrink:0}
+section h3{font-size:17px;margin:26px 0 8px}
+.sub{color:var(--muted);margin:0 0 16px}
+p{margin:10px 0}
+ul,ol{padding-left:22px}
+li{margin:4px 0}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px;margin:14px 0;box-shadow:var(--shadow)}
+.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.callout{border-radius:12px;padding:12px 16px;margin:14px 0;border:1px solid var(--border);background:var(--panel-2);font-size:14.5px}
+.callout.info{background:var(--accent-soft);border-color:transparent}
+.callout.ok{background:var(--ok-soft);border-color:transparent}
+.callout.warn{background:var(--warn-soft);border-color:transparent}
+.callout.bad{background:var(--bad-soft);border-color:transparent}
+.callout b:first-child{display:block;margin-bottom:2px}
+.kbd{display:inline-block;border:1px solid var(--border);border-bottom-width:2px;border-radius:6px;padding:0 6px;font-size:12.5px;background:var(--panel);font-family:ui-monospace,Consolas,monospace}
+.pill{display:inline-block;font-size:12px;font-weight:650;border-radius:999px;padding:1px 9px;background:var(--panel-2);border:1px solid var(--border);color:var(--text-2)}
+.pill.blue{background:var(--accent-soft);color:var(--accent-ink);border-color:transparent}
+.pill.green{background:var(--ok-soft);color:var(--ok);border-color:transparent}
+.pill.orange{background:var(--warn-soft);color:var(--warn);border-color:transparent}
+.pill.red{background:var(--bad-soft);color:var(--bad);border-color:transparent}
+table.t{width:100%;border-collapse:collapse;font-size:14px;margin:12px 0}
+table.t th{text-align:left;font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);font-weight:650;padding:8px 10px;border-bottom:1px solid var(--border)}
+table.t td{padding:9px 10px;border-bottom:1px solid var(--border);vertical-align:top}
+table.t tr:hover td{background:var(--panel-2)}
+table.t td code{white-space:nowrap}
+.tbl{overflow-x:auto}
+
+/* ---------------- kód */
+figure.code{margin:14px 0;border-radius:12px;overflow:hidden;border:1px solid var(--border);background:var(--code-bg);box-shadow:var(--shadow)}
+.code-head{display:flex;align-items:center;gap:8px;padding:8px 12px;background:#161c2a;color:#c9d1e3;font-size:12.5px;border-bottom:1px solid #222a3b}
+.code-head .dots{display:flex;gap:5px;margin-right:4px}
+.code-head .dots i{width:9px;height:9px;border-radius:50%;background:#3a4256;display:block}
+.code-head .file{font-family:ui-monospace,Consolas,monospace;color:#e6ebf7;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.code-head .lines{background:#26304a;color:#9fc2ff;border-radius:6px;padding:0 7px;font-size:11.5px;white-space:nowrap}
+.code-head .ttl{color:#8b95ad;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.code-head button{margin-left:auto;background:#26304a;border:0;color:#cfd8ee;border-radius:7px;padding:3px 10px;font-size:12px;cursor:pointer}
+.code-head button:hover{background:#34416a}
+figure.code pre{margin:0;max-height:440px;overflow:auto}
+figure.code code{display:block;background:transparent!important;border:0;padding:14px 16px!important;font-size:12.8px;line-height:1.55;white-space:pre}
+.cmd{display:flex;align-items:center;gap:10px;background:var(--code-bg);color:#e6ebf7;border-radius:10px;padding:10px 12px;margin:8px 0;font-family:ui-monospace,Consolas,monospace;font-size:13px;overflow-x:auto}
+.cmd::before{content:"$";color:#6d7da0}
+.cmd span{flex:1;white-space:pre}
+.cmd button{background:#26304a;border:0;color:#cfd8ee;border-radius:7px;padding:3px 10px;font-size:12px;cursor:pointer;font-family:inherit}
+.where{display:inline-flex;align-items:center;gap:6px;font-size:13px;background:var(--panel-2);border:1px solid var(--border);border-radius:8px;padding:2px 9px;font-family:ui-monospace,Consolas,monospace;color:var(--text-2)}
+.where::before{content:"📄"}
+
+/* ---------------- fülek */
+.tabs{margin:14px 0}
+.tab-btns{display:flex;gap:4px;flex-wrap:wrap;background:var(--panel-2);border:1px solid var(--border);border-radius:12px;padding:4px;width:fit-content;max-width:100%}
+.tab-btns button{border:0;background:none;color:var(--text-2);border-radius:9px;padding:7px 14px;font:inherit;font-size:14px;cursor:pointer}
+.tab-btns button.on{background:var(--panel);color:var(--text);box-shadow:var(--shadow);font-weight:650}
+.tab-panel{display:none;margin-top:12px;overflow-x:auto;min-width:0}
+.tab-panel.on{display:block;animation:fade .25s}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+
+/* ---------------- lépésdiagram (pipeline) */
+.pipeline{margin:16px 0}
+.psteps{display:flex;flex-wrap:wrap;gap:8px;align-items:stretch}
+.pstep{flex:1 1 130px;min-width:120px;border:1px solid var(--border);background:var(--panel);border-radius:12px;padding:10px 12px;text-align:left;cursor:pointer;font:inherit;color:var(--text);position:relative;transition:transform .15s,border-color .15s,box-shadow .15s}
+.pstep:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+.pstep b{display:block;font-size:14px}
+.pstep small{display:block;color:var(--muted);font-size:12px;line-height:1.35;margin-top:2px}
+.pstep .ic{font-size:20px}
+.pstep.on{border-color:var(--accent);background:var(--accent-soft)}
+.pstep:not(:last-child)::after{content:"→";position:absolute;right:-12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:14px;z-index:2}
+.pdetail{margin-top:10px;border-radius:12px;background:var(--panel-2);border:1px solid var(--border);padding:14px 16px;min-height:60px;animation:fade .25s}
+
+/* ---------------- kattintható képernyő-makett */
+.hotspot{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(240px,1fr);gap:16px;margin:16px 0;align-items:start}
+@media (max-width:820px){.hotspot{grid-template-columns:minmax(0,1fr)}}
+.mock-scroll{min-width:0}
+.mock-scroll .mock{width:680px}
+.mock .m-top b{white-space:nowrap}
+.mock{position:relative;border-radius:14px;border:1px solid var(--border);background:var(--panel);box-shadow:var(--shadow);overflow:hidden;font-size:12.5px;line-height:1.4;color:var(--text)}
+.mock .bar{display:flex;align-items:center;gap:8px;padding:8px 12px;border-bottom:1px solid var(--border);background:var(--panel-2)}
+.mock .bar .dots{display:flex;gap:5px}.mock .bar .dots i{width:9px;height:9px;border-radius:50%;background:var(--border);display:block}
+.mock .url{flex:1;background:var(--panel);border:1px solid var(--border);border-radius:7px;padding:2px 10px;color:var(--muted);font-size:11.5px}
+.hot{position:absolute;width:26px;height:26px;border-radius:50%;border:2px solid #fff;background:var(--accent);color:#fff;font-weight:750;font-size:12px;cursor:pointer;display:grid;place-items:center;box-shadow:0 0 0 4px var(--accent-soft),0 4px 12px rgba(0,0,0,.25);z-index:3;transition:transform .15s}
+.hot:hover{transform:scale(1.12)}
+.hot.on{background:var(--accent-2);animation:ping 1.6s infinite}
+@keyframes ping{0%{box-shadow:0 0 0 0 rgba(98,80,214,.55)}70%{box-shadow:0 0 0 12px rgba(98,80,214,0)}100%{box-shadow:0 0 0 0 rgba(98,80,214,0)}}
+.hot-info{position:sticky;top:20px;border-radius:14px;border:1px solid var(--border);background:var(--panel);padding:16px 18px;box-shadow:var(--shadow)}
+.hot-info .hn{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:50%;background:var(--accent-2);color:#fff;font-weight:750;font-size:12px;margin-right:8px}
+.hot-info h4{margin:0 0 6px;font-size:16px;display:flex;align-items:center}
+.hot-info .hl{font-size:14px;color:var(--text-2)}
+.hot-nav{display:flex;gap:6px;margin-top:12px}
+.hot-nav button{border:1px solid var(--border);background:var(--panel-2);color:var(--text);border-radius:8px;padding:4px 10px;cursor:pointer;font:inherit;font-size:13px}
+.zone{outline:2px dashed transparent;outline-offset:2px;border-radius:6px;transition:outline-color .2s,background .2s}
+.zone.lit{outline-color:var(--accent-2);background:rgba(98,80,214,.06)}
+
+/* makett-elemek (chat + admin) */
+.m-top{display:flex;align-items:center;gap:8px;padding:8px 12px;border-bottom:1px solid var(--border)}
+.m-top b{font-size:13px}
+.m-btn{border:1px solid var(--border);border-radius:7px;padding:2px 8px;font-size:11.5px;background:var(--panel);white-space:nowrap}
+.m-btn.p{background:var(--s1);border-color:var(--s1);color:#fff}
+.m-body{display:grid;grid-template-columns:5fr 7fr;gap:10px;padding:10px;background:var(--bg)}
+.m-panel{background:var(--panel);border:1px solid var(--border);border-radius:9px;padding:8px}
+.m-h{font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:650;margin-bottom:6px}
+.m-src{border:1px solid var(--border);border-radius:7px;padding:6px 7px;margin-bottom:6px}
+.m-src.c{border-color:var(--s1)}
+.m-num{display:inline-grid;place-items:center;min-width:16px;height:16px;border-radius:8px;background:var(--panel-2);font-size:10px;font-weight:700;margin-right:4px}
+.m-src.c .m-num{background:var(--s1);color:#fff}
+.m-line{height:6px;border-radius:3px;background:var(--panel-2);margin:4px 0}
+.m-msg{border-radius:10px;padding:7px 9px;margin:6px 0;max-width:92%}
+.m-msg.u{margin-left:auto;background:var(--s1);color:#fff;width:fit-content}
+.m-msg.b{background:var(--panel-2)}
+.m-cite{display:inline-grid;place-items:center;min-width:14px;height:14px;border-radius:7px;background:var(--s1);color:#fff;font-size:9px;font-weight:700;vertical-align:1px}
+.m-thumbs{display:flex;gap:5px;margin-top:6px}.m-thumbs i{width:46px;height:34px;border-radius:5px;border:1px solid var(--border);background:linear-gradient(135deg,var(--panel),var(--panel-2));display:block}
+.m-foot{display:flex;gap:8px;align-items:center;font-size:10.5px;color:var(--muted);margin-top:4px}
+.m-input{display:flex;gap:6px;align-items:center;margin-top:8px}
+.m-input .f{flex:1;border:1px solid var(--border);border-radius:8px;padding:6px 8px;color:var(--muted);background:var(--panel)}
+.m-tabs{display:flex;gap:4px}.m-tabs span{padding:3px 8px;border-radius:7px;font-size:11.5px;color:var(--muted)}.m-tabs span.on{background:var(--accent-soft);color:var(--accent-ink);font-weight:650}
+.m-kpis{display:flex;gap:6px;flex-wrap:wrap}.m-kpi{border:1px solid var(--border);border-radius:8px;padding:4px 8px;background:var(--panel)}.m-kpi b{display:block;font-size:14px}.m-kpi span{font-size:9.5px;color:var(--muted)}
+
+/* ---------------- mini diagramok (SVG) */
+.chart-demo{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:14px 16px;box-shadow:var(--shadow);margin:12px 0}
+.chart-demo h4{margin:0 0 2px;font-size:15px}
+.chart-demo .cap{font-size:13px;color:var(--muted);margin-bottom:6px}
+.chart-demo svg{width:100%;height:auto;display:block;overflow:visible}
+.chart-demo .grid line{stroke:var(--border)}
+.chart-demo text{fill:var(--muted);font-size:11px;font-family:inherit}
+.chart-demo .anno{fill:var(--text-2);font-size:11.5px;font-weight:600}
+.chart-demo .anno-line{stroke:var(--text-2);stroke-width:1;stroke-dasharray:3 3;fill:none}
+.chart-demo [data-tip]{cursor:pointer;transition:opacity .15s}
+.chart-demo [data-tip]:hover{opacity:.8}
+.legend{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:12.5px;color:var(--text-2);margin:4px 0 6px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+#tip{position:fixed;pointer-events:none;background:#141a26;color:#fff;font-size:12.5px;border-radius:9px;padding:7px 10px;max-width:280px;z-index:80;box-shadow:0 8px 24px rgba(0,0,0,.25);opacity:0;transition:opacity .12s}
+#tip.on{opacity:1}
+
+/* ---------------- szójegyzék, lista */
+.gloss-search{width:100%;border:1px solid var(--border);background:var(--panel);color:var(--text);border-radius:11px;padding:10px 14px;font:inherit;margin:8px 0 12px}
+.gloss{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
+.gloss-item{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:12px 14px}
+.gloss-item b{display:block;font-size:15px}
+.gloss-item .full{font-size:12px;color:var(--accent-ink);margin-bottom:4px}
+.gloss-item p{margin:4px 0 0;font-size:13.5px;color:var(--text-2)}
+.gloss-item.hidden{display:none}
+.checklist{list-style:none;padding:0}
+.checklist li{display:flex;gap:10px;align-items:flex-start;padding:9px 12px;border:1px solid var(--border);border-radius:11px;background:var(--panel);margin:7px 0}
+.checklist input{margin-top:4px;width:17px;height:17px;accent-color:var(--accent)}
+.checklist li.done{opacity:.65}.checklist li.done span{text-decoration:line-through}
+.check-progress{height:8px;border-radius:5px;background:var(--panel-2);overflow:hidden;margin:6px 0}.check-progress i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent-2));width:0;transition:width .3s}
+details.acc{border:1px solid var(--border);border-radius:12px;background:var(--panel);margin:8px 0;overflow:hidden}
+details.acc summary{cursor:pointer;padding:12px 16px;font-weight:650;list-style:none;display:flex;align-items:center;gap:10px}
+details.acc summary::-webkit-details-marker{display:none}
+details.acc summary::before{content:"▸";color:var(--accent);transition:transform .2s}
+details.acc[open] summary::before{transform:rotate(90deg)}
+details.acc .acc-body{padding:0 16px 14px}
+.tree{font-family:ui-monospace,Consolas,monospace;font-size:13px;background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:12px 16px;line-height:1.75;white-space:pre;overflow-x:auto}
+.tree .d{color:var(--accent-ink);font-weight:650}.tree .c{color:var(--muted);font-family:system-ui,sans-serif;font-size:12.5px}
+
+/* ---------------- láb */
+footer.foot{margin-top:60px;border-top:1px solid var(--border);padding:20px 0;color:var(--muted);font-size:13px}
+@media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}html{scroll-behavior:auto}}
+@media print{aside.side,.menu-btn,#progress{display:none!important}.hero canvas{display:none}}
+</style>
+</head>
+<body>
+<div id="progress"></div>
+<button class="menu-btn" aria-label="Menü" onclick="document.body.classList.toggle('nav-open')">☰</button>
+<div class="layout">
+  <aside class="side">
+    <div class="side-head">
+      <div class="side-brand"><div class="side-logo">📘</div><div>Admin útmutató<div class="side-sub">Útmutató-asszisztens · az admin felület minden része</div></div></div>
+      <div class="side-tools">
+        <input class="side-search" type="search" placeholder="Keresés a menüben…" aria-label="Keresés a menüben">
+        <button class="icon-btn" id="themeBtn" title="Világos / sötét téma" aria-label="Téma váltása">◐</button>
+      </div>
+    </div>
+    <nav class="toc" aria-label="Tartalom"></nav>
+    <div class="side-foot">Útmutató-asszisztens · 07. heti záróprojekt</div>
+  </aside>
+  <main>
+<header class="hero"><canvas id="hero3d" aria-hidden="true"></canvas><div class="wrap">
+  <span class="eyebrow">🛠️ Interaktív útmutató · adminoknak</span>
+  <h1>Az admin felület – minden része, röviden</h1>
+  <p class="lead">Melyik fül mire való, mit mutatnak a diagramok és a számok, mit jelentenek a rövidítések (P50, TTFT, MRR…), és mit
+  tegyél, ha valami nem stimmel. A diagramok fölé állva példaértékeket látsz.</p>
+  <div class="hero-badges"><span class="badge">📍 <code>http://localhost:8070/admin</code></span><span class="badge">🗂️ 5 fül</span><span class="badge">📊 példadiagramok</span><span class="badge">🔎 kereshető szójegyzék</span></div>
+</div></header>
+
+<div class="wrap">
+
+<section id="belepes" data-nav="Belépés és a fülek" data-group="Bevezetés">
+  <h2>Belépés és a fülek</h2>
+  <p class="sub">Az admin felület a chat mellett, a <code>/admin</code> címen érhető el.</p>
+  <div class="grid-2">
+    <div class="card"><b>🔑 Belépés</b><p>Jelszó: a szerver <code>.env</code> fájljában lévő <code>ADMIN_SECRET</code> (a rendszergazdától kapod). A böngésző
+      csak az adott lapon jegyzi meg; a <b>Kilépés</b> gomb törli. Rossz jelszónál „Hibás admin jelszó”.</p></div>
+    <div class="card"><b>🧭 Navigáció</b><p>Felül 5 fül; az aktuális fül a címben is megjelenik (pl. <code>/admin#monitoring</code>), így
+      könyvjelzőzhető. A <b>Chat</b> gomb visszavisz a felhasználói felületre.</p></div>
+  </div>
+  <div class="tbl"><table class="t">
+    <tr><th>Fül</th><th>Mire való – egy mondatban</th><th>Mikor nézd?</th></tr>
+    <tr><td>📊 <b>Analitika</b></td><td>Diagramos áttekintés: forgalom, elégedettség, sebesség, költség, megválaszolatlan kérdések.</td><td>naponta / hetente</td></tr>
+    <tr><td>📄 <b>Dokumentumok</b></td><td>Útmutatók feltöltése, állapota, részletei (szövegrészletek, képek), javítása.</td><td>új útmutatónál, hibánál</td></tr>
+    <tr><td>💬 <b>Visszajelzések</b></td><td>A felhasználók 👍/👎 értékelései, okai, megjegyzései + MI-s témaelemzés.</td><td>hetente</td></tr>
+    <tr><td>⏱️ <b>Monitoring</b></td><td>Válaszidő és költség részletesen, LLM-hívásonként; link a Phoenixre.</td><td>ha lassú vagy drága</td></tr>
+    <tr><td>🧪 <b>Mérések</b></td><td>A minőségmérés (RAG / prompt / alkalmazás) eredményei.</td><td>változtatás után</td></tr>
+  </table></div>
+</section>
+
+<section id="terkep" data-nav="Az admin térképe" data-group="Bevezetés">
+  <h2>Az admin térképe</h2>
+  <p class="sub">Kattints a számokra (vagy lapozz a nyilakkal).</p>
+  <div class="hotspot">
+    <div class="mock">
+      <div class="bar"><span class="dots"><i></i><i></i><i></i></span><span class="url">localhost:8070/admin#analytics</span></div>
+      <div class="m-top"><b>📘 Útmutató-asszisztens</b><span class="pill blue" style="font-size:10px">Admin</span>
+        <div class="m-tabs zone" data-zone="tabs"><span class="on">Analitika</span><span>Dokumentumok</span><span>Visszajelzések</span><span>Monitoring</span><span>Mérések</span></div>
+        <span class="m-btn zone" data-zone="out" style="margin-left:auto">Chat</span><span class="m-btn">Kilépés</span></div>
+      <div style="padding:10px;background:var(--bg)">
+        <div class="zone" data-zone="filter" style="display:flex;gap:6px;align-items:center;margin-bottom:8px"><span class="m-btn">7 nap</span><span class="m-btn p">30 nap</span><span class="m-btn">90 nap</span><span style="font-size:11px;color:var(--muted)">☑ mérési (szimulált) forgalommal</span></div>
+        <div class="m-kpis zone" data-zone="kpi"><div class="m-kpi"><b>81</b><span>válasz</span></div><div class="m-kpi"><b>6 %</b><span>„nem találtam” arány</span></div><div class="m-kpi"><b>12</b><span>értékelt válasz</span></div><div class="m-kpi"><b>83 %</b><span>elégedettség</span></div></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
+          <div class="m-panel zone" data-zone="chart"><div class="m-h" style="display:flex">Kérdések naponta<span style="margin-left:auto" class="zone" data-zone="table">Táblázat</span></div>
+            <svg viewBox="0 0 200 70" style="width:100%"><g fill="var(--s1)"><rect x="12" y="40" width="10" height="26" rx="2"/><rect x="40" y="30" width="10" height="36" rx="2"/><rect x="68" y="34" width="10" height="32" rx="2"/><rect x="96" y="22" width="10" height="44" rx="2"/><rect x="124" y="44" width="10" height="22" rx="2"/><rect x="152" y="16" width="10" height="50" rx="2"/><rect x="180" y="10" width="10" height="56" rx="2"/></g><g fill="var(--s2)"><rect x="152" y="9" width="10" height="5"/><rect x="68" y="27" width="10" height="5"/></g></svg></div>
+          <div class="m-panel"><div class="m-h">Elégedettség naponta</div>
+            <svg viewBox="0 0 200 70" style="width:100%"><path d="M10,40 L40,30 L70,34 L100,20 L130,26 L160,14 L190,18" fill="none" stroke="var(--s1)" stroke-width="2"/><g fill="var(--s1)"><circle cx="10" cy="40" r="3"/><circle cx="100" cy="20" r="3"/><circle cx="190" cy="18" r="3"/></g></svg></div>
+        </div>
+      </div>
+      <button class="hot" style="left:34%;top:16%" data-zone="tabs" data-title="Fülek"><template>Az öt fül: <b>Analitika</b> (nyitó), Dokumentumok, Visszajelzések, Monitoring, Mérések. A kiválasztott fül kék.</template></button>
+      <button class="hot" style="left:82%;top:16%" data-zone="out" data-title="Chat / Kilépés"><template>A <b>Chat</b> visszavisz a felhasználói felületre, a <b>Kilépés</b> törli a megjegyzett jelszót.</template></button>
+      <button class="hot" style="left:3%;top:29%" data-zone="filter" data-title="Időszak és szűrő"><template>Melyik időszakot mutassa (7 / 30 / 90 nap). A „mérési forgalommal” kapcsolóval a mérésekből jövő <b>szimulált</b> kérdéseket ki lehet venni – így csak a valódi felhasználók látszanak.</template></button>
+      <button class="hot" style="left:3%;top:43%" data-zone="kpi" data-title="Mutató-csempék"><template>A legfontosabb számok egy pillantásra. A narancssárga szám figyelmeztet (pl. 15 % fölötti „nem találtam” arány).</template></button>
+      <button class="hot" style="left:3%;top:66%" data-zone="chart" data-title="Diagram"><template>Minden diagram fölé állva <b>tooltip</b> mutatja a pontos értékeket. A színek jelentése a diagram fölötti jelmagyarázatban.</template></button>
+      <button class="hot" style="left:44%;top:60%" data-zone="table" data-title="Táblázat-nézet"><template>A „Táblázat” gomb a diagram helyett a számokat mutatja – kimásolható, és színtévesztőknek is olvasható.</template></button>
+    </div>
+    <div class="hot-info"></div>
+  </div>
+</section>
+
+<section id="analitika" data-nav="Analitika" data-group="A fülek">
+  <h2>📊 Analitika</h2>
+  <p class="sub">A nyitó fül: diagramos dashboard. A lenti diagramok <b>példaadatokkal</b> mutatják, mire figyelj – vidd föléjük az egeret.</p>
+  <h3>A négy mutató</h3>
+  <div class="tbl"><table class="t">
+    <tr><th>Mutató</th><th>Mit jelent?</th><th>Jó érték</th></tr>
+    <tr><td><b>válasz</b></td><td>Hány kérdésre válaszolt a rendszer az időszakban.</td><td>–</td></tr>
+    <tr><td><b>„nem találtam” arány</b></td><td>A kérdések hány %-ára nem volt forrás az útmutatókban.</td><td><span class="pill green">&lt; 10 %</span> · narancs, ha &gt; 15 %</td></tr>
+    <tr><td><b>értékelt válasz</b></td><td>Hány válaszra kattintottak 👍 vagy 👎 gombot.</td><td>minél több</td></tr>
+    <tr><td><b>elégedettség</b></td><td>A 👍 aránya az értékelt válaszokon belül.</td><td><span class="pill green">&gt; 80 %</span></td></tr>
+  </table></div>
+
+  <div class="grid-2">
+    <div><div class="chart-demo"><h4>Kérdések naponta és kimenetük</h4><div class="cap">Halmozott oszlop: egy oszlop = egy nap.</div><div class="legend"><span><i style="background:var(--s1)"></i>Válaszolt (forrással)</span><span><i style="background:var(--s2)"></i>„Nem találtam”</span><span><i style="background:var(--s3)"></i>Smalltalk / témán kívüli</span><span><i style="background:var(--s4)"></i>Hiba</span></div><svg viewBox="0 0 560 230" role="img" aria-label="Kérdések naponta és kimenetük"><g class="grid"><line x1="44" x2="546" y1="200.0" y2="200.0"/><text x="38" y="204.0" text-anchor="end">0</text><line x1="44" x2="546" y1="154.0" y2="154.0"/><text x="38" y="158.0" text-anchor="end">12,5</text><line x1="44" x2="546" y1="108.0" y2="108.0"/><text x="38" y="112.0" text-anchor="end">25</text><line x1="44" x2="546" y1="62.0" y2="62.0"/><text x="38" y="66.0" text-anchor="end">37,5</text><line x1="44" x2="546" y1="16.0" y2="16.0"/><text x="38" y="20.0" text-anchor="end">50</text></g><path d="M67.9,200.0 V155.8 Q67.9,155.8 67.9,155.8 H91.9 Q91.9,155.8 91.9,155.8 V200.0 Z" fill="var(--s1)" data-tip="&lt;b&gt;10.19.&lt;/b&gt;&lt;br&gt;Válaszolt (forrással): 12&lt;br&gt;„Nem találtam”: 2&lt;br&gt;Smalltalk / témán kívüli: 3&lt;br&gt;Hiba: 0"/><path d="M67.9,153.8 V148.5 Q67.9,148.5 67.9,148.5 H91.9 Q91.9,148.5 91.9,148.5 V153.8 Z" fill="var(--s2)" data-tip="&lt;b&gt;10.19.&lt;/b&gt;&lt;br&gt;Válaszolt (forrással): 12&lt;br&gt;„Nem találtam”: 2&lt;br&gt;Smalltalk / témán kívüli: 3&lt;br&gt;Hiba: 0"/><path d="M67.9,146.5 V141.4 Q67.9,137.4 71.9,137.4 H87.9 Q91.9,137.4 91.9,141.4 V146.5 Z" fill="var(--s3)" data-tip="&lt;b&gt;10.19.&lt;/b&gt;&lt;br&gt;Válaszolt (forrással): 12&lt;br&gt;„Nem találtam”: 2&lt;br&gt;Smalltalk / témán kívüli: 3&lt;br&gt;Hiba: 0"/><text x="79.9" y="220" text-anchor="middle">10.19.</text><path d="M139.6,200.0 V133.8 Q139.6,133.8 139.6,133.8 H163.6 Q163.6,133.8 163.6,133.8 V200.0 Z" fill="var(--s1)" data-tip="&lt;b&gt;10.20.&lt;/b&gt;&lt;br&gt;Válaszolt (forrással): 18&lt;br&gt;„Nem találtam”: 1&lt;br&gt;Smalltalk / témán kívüli: 2&lt;br&gt;Hiba: 0"/><path d="M139.6,131.8 V130.1 Q139.6,130.1 139.6,130.1 H163.6 Q163.6,130.1 163.6,130.1 V131.8 Z" fill="var(--s2)" data-tip="&lt;b&gt;10.20.&lt;/b&gt;&lt;br&gt;Válaszolt (forrással): 18&lt;br&gt;„Nem találtam”: 1&lt;br&gt;Smalltalk / témán kívüli: 2&lt;br&gt;Hiba: 0"/><path d="M139.6,128.1 V126.7 Q139.6,122.7 143.6,122.7 H159.6 Q163.6,122.7 163.6,126.7 V128.1 Z" fill="var(--s3)" data-tip="&lt;b&gt;10.20.&lt;/b&gt;&lt;br&gt;Válaszolt (forrással): 18&lt;br&gt;„Nem találtam”: 1&lt;br&gt;Smalltalk / témán kívüli: 2&lt;br&gt;Hiba: 0"/><text x="151.6" y="220" text-anchor="middle">10.20.</text><path d="M211.3,200.0 V144.8 Q211.3,144.8 211.3,144.8 H235.3 Q235.3,144.8 235.3,144.8 V200.0 Z" fill="var(--s1)" data-tip="&lt;b&gt;10.21.&lt;/b&gt;&lt;br&gt;Válaszolt (forrással): 15&lt;br&gt;„Nem találtam”: 3&lt;br&gt;Smalltalk / témán kívüli: 4&lt;br&gt;Hiba: 1"/><path d="M211.3,142.8 V133.8 Q211.3,133.8 211.3,133.8 H235.3 Q235.3,133.8 235.3,133.8 V142.8 Z" fill="var(--s2)" data-tip="&lt;b&gt;10.21.&lt;/b&gt;&lt;br&gt;Válaszolt (forrással): 15&lt;br&gt;„Nem találtam”: 3&lt;br&gt;Smalltalk / témán kívüli: 4&lt;br&gt;Hiba: 1"/><path d="M211.3,131.8 V119.0 Q211.3,119.0 211.3,119.0 H235.3 Q235.3,119.0 235.3,119.0 V131.8 Z" fill="var(--s3)" data-tip="&lt;b&gt;10.21.&lt;/b&gt;&lt;br&gt;Válaszolt (forrással): 15&lt;br&gt;„Nem találtam”: 3&lt;br&gt;Smalltalk / témán kívüli: 4&lt;br&gt;Hiba: 1"/><path d="M211.3,117.0 V117.0 Q211.3,115.4 213.0,115.4 H233.6 Q235.3,115.4 235.3,117.0 V117.0 Z" fill="var(--s4)" data-tip="&lt;b&gt;10.21.&lt;/b&gt;&lt;br&gt;Válaszolt (forrással): 15&lt;br&gt;„Nem találtam”: 3&lt;br&gt;Smalltalk / témán kívüli: 4&lt;br&gt;Hiba: 1"/><text x="223.3" y="220" text-anchor="middle">10.21.</text><path d="M283.0,200.0 V119.0 Q283.0,119.0 283.0,119.0 H307.0 Q307.0,119.0 307.0,119.0 V200.0 Z" fill="var(--s1)" data-tip="&lt;b&gt;10.22.&lt;/b&gt;&lt;br&gt;Válaszolt (forrással): 22&lt;br&gt;„Nem találtam”: 2&lt;br&gt;Smalltalk / témán kívüli: 1&lt;br&gt;Hiba: 0"/><path d="M283.0,117.0 V111.7 Q283.0,111.7 283.0,111.7 H307.0 Q307.0,111.7 307.0,111.7 V117.0 Z" fill="var(--s2)" data-tip="&lt;b&gt;10.22.&lt;/b&gt;&lt;br&gt;Válaszolt (forrással): 22&lt;br&gt;„Nem találtam”: 2&lt;br&gt;Smalltalk / témán kívüli: 1&lt;br&gt;Hiba: 0"/><path d="M283.0,109.7 V109.7 Q283.0,108.0 284.7,108.0 H305.3 Q307.0,108.0 307.0,109.7 V109.7 Z" fill="var(--s3)" data-tip="&lt;b&gt;10.22.&lt;/b&gt;&lt;br&gt;Válaszolt (forrással): 22&lt;br&gt;„Nem találtam”: 2&lt;br&gt;Smalltalk / témán kívüli: 1&lt;br&gt;Hiba: 0"/><text x="295.0" y="220" text-anchor="middle">10.22.</text><path d="M354.7,200.0 V166.9 Q354.7,166.9 354.7,166.9 H378.7 Q378.7,166.9 378.7,166.9 V200.0 Z" fill="var(--s1)" data-tip="&lt;b&gt;10.23.&lt;/b&gt;&lt;br&gt;Válaszolt (forrással): 9&lt;br&gt;„Nem találtam”: 1&lt;br&gt;Smalltalk / témán kívüli: 2&lt;br&gt;Hiba: 0"/><path d="M354.7,164.9 V163.2 Q354.7,163.2 354.7,163.2 H378.7 Q378.7,163.2 378.7,163.2 V164.9 Z" fill="var(--s2)" data-tip="&lt;b&gt;10.23.&lt;/b&gt;&lt;br&gt;Válaszolt (forrással): 9&lt;br&gt;„Nem találtam”: 1&lt;br&gt;Smalltalk / témán kívüli: 2&lt;br&gt;Hiba: 0"/><path d="M354.7,161.2 V159.8 Q354.7,155.8 358.7,155.8 H374.7 Q378.7,155.8 378.7,159.8 V161.2 Z" fill="var(--s3)" data-tip="&lt;b&gt;10.23.&lt;/b&gt;&lt;br&gt;Válaszolt (forrással): 9&lt;br&gt;„Nem találtam”: 1&lt;br&gt;Smalltalk / témán kívüli: 2&lt;br&gt;Hiba: 0"/><text x="366.7" y="220" text-anchor="middle">10.23.</text><path d="M426.4,200.0 V108.0 Q426.4,108.0 426.4,108.0 H450.4 Q450.4,108.0 450.4,108.0 V200.0 Z" fill="var(--s1)" data-tip="&lt;b&gt;10.24.&lt;/b&gt;&lt;br&gt;Válaszolt (forrással): 25&lt;br&gt;„Nem találtam”: 7&lt;br&gt;Smalltalk / témán kívüli: 3&lt;br&gt;Hiba: 0"/><path d="M426.4,106.0 V82.2 Q426.4,82.2 426.4,82.2 H450.4 Q450.4,82.2 450.4,82.2 V106.0 Z" fill="var(--s2)" data-tip="&lt;b&gt;10.24.&lt;/b&gt;&lt;br&gt;Válaszolt (forrással): 25&lt;br&gt;„Nem találtam”: 7&lt;br&gt;Smalltalk / témán kívüli: 3&lt;br&gt;Hiba: 0"/><path d="M426.4,80.2 V75.2 Q426.4,71.2 430.4,71.2 H446.4 Q450.4,71.2 450.4,75.2 V80.2 Z" fill="var(--s3)" data-tip="&lt;b&gt;10.24.&lt;/b&gt;&lt;br&gt;Válaszolt (forrással): 25&lt;br&gt;„Nem találtam”: 7&lt;br&gt;Smalltalk / témán kívüli: 3&lt;br&gt;Hiba: 0"/><text x="438.4" y="220" text-anchor="middle">10.24.</text><path d="M498.1,200.0 V89.6 Q498.1,89.6 498.1,89.6 H522.1 Q522.1,89.6 522.1,89.6 V200.0 Z" fill="var(--s1)" data-tip="&lt;b&gt;10.25.&lt;/b&gt;&lt;br&gt;Válaszolt (forrással): 30&lt;br&gt;„Nem találtam”: 2&lt;br&gt;Smalltalk / témán kívüli: 5&lt;br&gt;Hiba: 0"/><path d="M498.1,87.6 V82.2 Q498.1,82.2 498.1,82.2 H522.1 Q522.1,82.2 522.1,82.2 V87.6 Z" fill="var(--s2)" data-tip="&lt;b&gt;10.25.&lt;/b&gt;&lt;br&gt;Válaszolt (forrással): 30&lt;br&gt;„Nem találtam”: 2&lt;br&gt;Smalltalk / témán kívüli: 5&lt;br&gt;Hiba: 0"/><path d="M498.1,80.2 V67.8 Q498.1,63.8 502.1,63.8 H518.1 Q522.1,63.8 522.1,67.8 V80.2 Z" fill="var(--s3)" data-tip="&lt;b&gt;10.25.&lt;/b&gt;&lt;br&gt;Válaszolt (forrással): 30&lt;br&gt;„Nem találtam”: 2&lt;br&gt;Smalltalk / témán kívüli: 5&lt;br&gt;Hiba: 0"/><text x="510.1" y="220" text-anchor="middle">10.25.</text><path class="anno-line" d="M438.4,67.2 L408.4,57.2"/><circle cx="438.4" cy="67.2" r="3" fill="var(--text-2)"/><text class="anno" x="404.4" y="53.2" text-anchor="end">sok „nem találtam”</text></svg></div></div>
+    <div class="card" style="margin-top:12px"><b>Mit mutat?</b><p>Naponta hány kérdés jött, és mi lett a kimenetük.</p>
+      <b>Mire figyelj?</b><p>A <span class="pill orange">narancs</span> szelet a „nem találtam”: ha megugrik (10.24.), valamire nincs útmutató, vagy rosszul olvasódott be. A sárga a hiba (pl. elérhetetlen modell).</p>
+      <b>Teendő</b><p>Nézd meg lent a <b>Megválaszolatlan kérdések</b> listát → töltsd fel a hiányzó útmutatót, vagy dolgozd fel újra.</p></div>
+  </div>
+
+  <div class="grid-2">
+    <div><div class="chart-demo"><h4>Elégedettség naponta</h4><div class="cap">A 👍 aránya; a pont fölé állva a 👍/👎 darabszám.</div><svg viewBox="0 0 560 230" role="img" aria-label="Elégedettség naponta"><g class="grid"><line x1="44" x2="546" y1="200.0" y2="200.0"/><text x="38" y="204.0" text-anchor="end">0 %</text><line x1="44" x2="546" y1="154.0" y2="154.0"/><text x="38" y="158.0" text-anchor="end">25 %</text><line x1="44" x2="546" y1="108.0" y2="108.0"/><text x="38" y="112.0" text-anchor="end">50 %</text><line x1="44" x2="546" y1="62.0" y2="62.0"/><text x="38" y="66.0" text-anchor="end">75 %</text><line x1="44" x2="546" y1="16.0" y2="16.0"/><text x="38" y="20.0" text-anchor="end">100 %</text></g><path d="M44.0,71.2 L127.7,62.0 L211.3,67.5 L295.0,52.8 L378.7,56.5 L462.3,41.8 L546.0,34.4 L546.0,200 L44.0,200 Z" fill="var(--s1)" opacity=".1"/><path d="M44.0,71.2 L127.7,62.0 L211.3,67.5 L295.0,52.8 L378.7,56.5 L462.3,41.8 L546.0,34.4" fill="none" stroke="var(--s1)" stroke-width="2" stroke-linejoin="round"/><circle cx="44.0" cy="71.2" r="5" fill="var(--s1)" stroke="var(--panel)" stroke-width="2" data-tip="&lt;b&gt;10.19.&lt;/b&gt;&lt;br&gt;70 %&lt;br&gt;7 👍 · 3 👎"/><text x="44.0" y="220" text-anchor="middle">10.19.</text><circle cx="127.7" cy="62.0" r="5" fill="var(--s1)" stroke="var(--panel)" stroke-width="2" data-tip="&lt;b&gt;10.20.&lt;/b&gt;&lt;br&gt;75 %&lt;br&gt;6 👍 · 2 👎"/><text x="127.7" y="220" text-anchor="middle">10.20.</text><circle cx="211.3" cy="67.5" r="5" fill="var(--s1)" stroke="var(--panel)" stroke-width="2" data-tip="&lt;b&gt;10.21.&lt;/b&gt;&lt;br&gt;72 %&lt;br&gt;8 👍 · 3 👎"/><text x="211.3" y="220" text-anchor="middle">10.21.</text><circle cx="295.0" cy="52.8" r="5" fill="var(--s1)" stroke="var(--panel)" stroke-width="2" data-tip="&lt;b&gt;10.22.&lt;/b&gt;&lt;br&gt;80 %&lt;br&gt;8 👍 · 2 👎"/><text x="295.0" y="220" text-anchor="middle">10.22.</text><circle cx="378.7" cy="56.5" r="5" fill="var(--s1)" stroke="var(--panel)" stroke-width="2" data-tip="&lt;b&gt;10.23.&lt;/b&gt;&lt;br&gt;78 %&lt;br&gt;7 👍 · 2 👎"/><text x="378.7" y="220" text-anchor="middle">10.23.</text><circle cx="462.3" cy="41.8" r="5" fill="var(--s1)" stroke="var(--panel)" stroke-width="2" data-tip="&lt;b&gt;10.24.&lt;/b&gt;&lt;br&gt;86 %&lt;br&gt;6 👍 · 1 👎"/><text x="462.3" y="220" text-anchor="middle">10.24.</text><circle cx="546.0" cy="34.4" r="5" fill="var(--s1)" stroke="var(--panel)" stroke-width="2" data-tip="&lt;b&gt;10.25.&lt;/b&gt;&lt;br&gt;90 %&lt;br&gt;9 👍 · 1 👎"/><text x="546.0" y="220" text-anchor="middle">10.25.</text><path class="anno-line" d="M378.7,56.5 L338.7,30.5"/><circle cx="378.7" cy="56.5" r="3" fill="var(--text-2)"/><text class="anno" x="334.7" y="26.5" text-anchor="end">prompt-javítás után emelkedik</text></svg></div></div>
+    <div class="card" style="margin-top:12px"><b>Mit mutat?</b><p>Naponta a pozitív értékelések arányát.</p>
+      <b>Mire figyelj?</b><p>Egy változtatás (új útmutató, prompt-módosítás) után <b>emelkednie</b> kell. Ha esik, nézd a Visszajelzések fület: milyen okot jelöltek meg.</p>
+      <p class="tipbox">Kevés értékelésnél (pár darab) egy-egy 👎 nagyot mozdít – a tendenciát nézd, ne egy napot.</p></div>
+  </div>
+
+  <div class="grid-2">
+    <div><div class="chart-demo"><h4>Válaszidő lépésenként (napi átlag)</h4><div class="cap">Egy válasz ideje a 4 lépésre bontva, másodpercben.</div><div class="legend"><span><i style="background:var(--s1)"></i>Kérdés-átírás</span><span><i style="background:var(--s2)"></i>Keresés</span><span><i style="background:var(--s3)"></i>Rerank</span><span><i style="background:var(--s4)"></i>Válasz-generálás</span></div><svg viewBox="0 0 560 230" role="img" aria-label="Válaszidő lépésenként (napi átlag)"><g class="grid"><line x1="44" x2="546" y1="200.0" y2="200.0"/><text x="38" y="204.0" text-anchor="end">0 s</text><line x1="44" x2="546" y1="154.0" y2="154.0"/><text x="38" y="158.0" text-anchor="end">2,5 s</text><line x1="44" x2="546" y1="108.0" y2="108.0"/><text x="38" y="112.0" text-anchor="end">5 s</text><line x1="44" x2="546" y1="62.0" y2="62.0"/><text x="38" y="66.0" text-anchor="end">7,5 s</text><line x1="44" x2="546" y1="16.0" y2="16.0"/><text x="38" y="20.0" text-anchor="end">10 s</text></g><path d="M82.2,200.0 V174.2 Q82.2,174.2 82.2,174.2 H106.2 Q106.2,174.2 106.2,174.2 V200.0 Z" fill="var(--s1)" data-tip="&lt;b&gt;10.21.&lt;/b&gt;&lt;br&gt;Kérdés-átírás: 1,4 s&lt;br&gt;Keresés: 0,7 s&lt;br&gt;Rerank: 0,4 s&lt;br&gt;Válasz-generálás: 2,6 s"/><path d="M82.2,172.2 V161.4 Q82.2,161.4 82.2,161.4 H106.2 Q106.2,161.4 106.2,161.4 V172.2 Z" fill="var(--s2)" data-tip="&lt;b&gt;10.21.&lt;/b&gt;&lt;br&gt;Kérdés-átírás: 1,4 s&lt;br&gt;Keresés: 0,7 s&lt;br&gt;Rerank: 0,4 s&lt;br&gt;Válasz-generálás: 2,6 s"/><path d="M82.2,159.4 V154.0 Q82.2,154.0 82.2,154.0 H106.2 Q106.2,154.0 106.2,154.0 V159.4 Z" fill="var(--s3)" data-tip="&lt;b&gt;10.21.&lt;/b&gt;&lt;br&gt;Kérdés-átírás: 1,4 s&lt;br&gt;Keresés: 0,7 s&lt;br&gt;Rerank: 0,4 s&lt;br&gt;Válasz-generálás: 2,6 s"/><path d="M82.2,152.0 V110.2 Q82.2,106.2 86.2,106.2 H102.2 Q106.2,106.2 106.2,110.2 V152.0 Z" fill="var(--s4)" data-tip="&lt;b&gt;10.21.&lt;/b&gt;&lt;br&gt;Kérdés-átírás: 1,4 s&lt;br&gt;Keresés: 0,7 s&lt;br&gt;Rerank: 0,4 s&lt;br&gt;Válasz-generálás: 2,6 s"/><text x="94.2" y="220" text-anchor="middle">10.21.</text><path d="M182.6,200.0 V170.6 Q182.6,170.6 182.6,170.6 H206.6 Q206.6,170.6 206.6,170.6 V200.0 Z" fill="var(--s1)" data-tip="&lt;b&gt;10.22.&lt;/b&gt;&lt;br&gt;Kérdés-átírás: 1,6 s&lt;br&gt;Keresés: 0,8 s&lt;br&gt;Rerank: 0,3 s&lt;br&gt;Válasz-generálás: 3,1 s"/><path d="M182.6,168.6 V155.8 Q182.6,155.8 182.6,155.8 H206.6 Q206.6,155.8 206.6,155.8 V168.6 Z" fill="var(--s2)" data-tip="&lt;b&gt;10.22.&lt;/b&gt;&lt;br&gt;Kérdés-átírás: 1,6 s&lt;br&gt;Keresés: 0,8 s&lt;br&gt;Rerank: 0,3 s&lt;br&gt;Válasz-generálás: 3,1 s"/><path d="M182.6,153.8 V150.3 Q182.6,150.3 182.6,150.3 H206.6 Q206.6,150.3 206.6,150.3 V153.8 Z" fill="var(--s3)" data-tip="&lt;b&gt;10.22.&lt;/b&gt;&lt;br&gt;Kérdés-átírás: 1,6 s&lt;br&gt;Keresés: 0,8 s&lt;br&gt;Rerank: 0,3 s&lt;br&gt;Válasz-generálás: 3,1 s"/><path d="M182.6,148.3 V97.3 Q182.6,93.3 186.6,93.3 H202.6 Q206.6,93.3 206.6,97.3 V148.3 Z" fill="var(--s4)" data-tip="&lt;b&gt;10.22.&lt;/b&gt;&lt;br&gt;Kérdés-átírás: 1,6 s&lt;br&gt;Keresés: 0,8 s&lt;br&gt;Rerank: 0,3 s&lt;br&gt;Válasz-generálás: 3,1 s"/><text x="194.6" y="220" text-anchor="middle">10.22.</text><path d="M283.0,200.0 V172.4 Q283.0,172.4 283.0,172.4 H307.0 Q307.0,172.4 307.0,172.4 V200.0 Z" fill="var(--s1)" data-tip="&lt;b&gt;10.23.&lt;/b&gt;&lt;br&gt;Kérdés-átírás: 1,5 s&lt;br&gt;Keresés: 0,7 s&lt;br&gt;Rerank: 0,4 s&lt;br&gt;Válasz-generálás: 2,8 s"/><path d="M283.0,170.4 V159.5 Q283.0,159.5 283.0,159.5 H307.0 Q307.0,159.5 307.0,159.5 V170.4 Z" fill="var(--s2)" data-tip="&lt;b&gt;10.23.&lt;/b&gt;&lt;br&gt;Kérdés-átírás: 1,5 s&lt;br&gt;Keresés: 0,7 s&lt;br&gt;Rerank: 0,4 s&lt;br&gt;Válasz-generálás: 2,8 s"/><path d="M283.0,157.5 V152.2 Q283.0,152.2 283.0,152.2 H307.0 Q307.0,152.2 307.0,152.2 V157.5 Z" fill="var(--s3)" data-tip="&lt;b&gt;10.23.&lt;/b&gt;&lt;br&gt;Kérdés-átírás: 1,5 s&lt;br&gt;Keresés: 0,7 s&lt;br&gt;Rerank: 0,4 s&lt;br&gt;Válasz-generálás: 2,8 s"/><path d="M283.0,150.2 V104.6 Q283.0,100.6 287.0,100.6 H303.0 Q307.0,100.6 307.0,104.6 V150.2 Z" fill="var(--s4)" data-tip="&lt;b&gt;10.23.&lt;/b&gt;&lt;br&gt;Kérdés-átírás: 1,5 s&lt;br&gt;Keresés: 0,7 s&lt;br&gt;Rerank: 0,4 s&lt;br&gt;Válasz-generálás: 2,8 s"/><text x="295.0" y="220" text-anchor="middle">10.23.</text><path d="M383.4,200.0 V176.1 Q383.4,176.1 383.4,176.1 H407.4 Q407.4,176.1 407.4,176.1 V200.0 Z" fill="var(--s1)" data-tip="&lt;b&gt;10.24.&lt;/b&gt;&lt;br&gt;Kérdés-átírás: 1,3 s&lt;br&gt;Keresés: 0,6 s&lt;br&gt;Rerank: 0,3 s&lt;br&gt;Válasz-generálás: 2,7 s"/><path d="M383.4,174.1 V165.0 Q383.4,165.0 383.4,165.0 H407.4 Q407.4,165.0 407.4,165.0 V174.1 Z" fill="var(--s2)" data-tip="&lt;b&gt;10.24.&lt;/b&gt;&lt;br&gt;Kérdés-átírás: 1,3 s&lt;br&gt;Keresés: 0,6 s&lt;br&gt;Rerank: 0,3 s&lt;br&gt;Válasz-generálás: 2,7 s"/><path d="M383.4,163.0 V159.5 Q383.4,159.5 383.4,159.5 H407.4 Q407.4,159.5 407.4,159.5 V163.0 Z" fill="var(--s3)" data-tip="&lt;b&gt;10.24.&lt;/b&gt;&lt;br&gt;Kérdés-átírás: 1,3 s&lt;br&gt;Keresés: 0,6 s&lt;br&gt;Rerank: 0,3 s&lt;br&gt;Válasz-generálás: 2,7 s"/><path d="M383.4,157.5 V113.8 Q383.4,109.8 387.4,109.8 H403.4 Q407.4,109.8 407.4,113.8 V157.5 Z" fill="var(--s4)" data-tip="&lt;b&gt;10.24.&lt;/b&gt;&lt;br&gt;Kérdés-átírás: 1,3 s&lt;br&gt;Keresés: 0,6 s&lt;br&gt;Rerank: 0,3 s&lt;br&gt;Válasz-generálás: 2,7 s"/><text x="395.4" y="220" text-anchor="middle">10.24.</text><path d="M483.8,200.0 V172.4 Q483.8,172.4 483.8,172.4 H507.8 Q507.8,172.4 507.8,172.4 V200.0 Z" fill="var(--s1)" data-tip="&lt;b&gt;10.25.&lt;/b&gt;&lt;br&gt;Kérdés-átírás: 1,5 s&lt;br&gt;Keresés: 0,7 s&lt;br&gt;Rerank: 0,35 s&lt;br&gt;Válasz-generálás: 2,9 s"/><path d="M483.8,170.4 V159.5 Q483.8,159.5 483.8,159.5 H507.8 Q507.8,159.5 507.8,159.5 V170.4 Z" fill="var(--s2)" data-tip="&lt;b&gt;10.25.&lt;/b&gt;&lt;br&gt;Kérdés-átírás: 1,5 s&lt;br&gt;Keresés: 0,7 s&lt;br&gt;Rerank: 0,35 s&lt;br&gt;Válasz-generálás: 2,9 s"/><path d="M483.8,157.5 V153.1 Q483.8,153.1 483.8,153.1 H507.8 Q507.8,153.1 507.8,153.1 V157.5 Z" fill="var(--s3)" data-tip="&lt;b&gt;10.25.&lt;/b&gt;&lt;br&gt;Kérdés-átírás: 1,5 s&lt;br&gt;Keresés: 0,7 s&lt;br&gt;Rerank: 0,35 s&lt;br&gt;Válasz-generálás: 2,9 s"/><path d="M483.8,151.1 V103.7 Q483.8,99.7 487.8,99.7 H503.8 Q507.8,99.7 507.8,103.7 V151.1 Z" fill="var(--s4)" data-tip="&lt;b&gt;10.25.&lt;/b&gt;&lt;br&gt;Kérdés-átírás: 1,5 s&lt;br&gt;Keresés: 0,7 s&lt;br&gt;Rerank: 0,35 s&lt;br&gt;Válasz-generálás: 2,9 s"/><text x="495.8" y="220" text-anchor="middle">10.25.</text><path class="anno-line" d="M194.6,89.3 L234.6,87.3"/><circle cx="194.6" cy="89.3" r="3" fill="var(--text-2)"/><text class="anno" x="238.6" y="83.3" text-anchor="start">a generálás a legnagyobb</text></svg></div></div>
+    <div class="card" style="margin-top:12px"><b>Mit mutat?</b><p>Hol megy el az idő egy válasznál: <b>átírás</b> (a kérdés önállóvá alakítása) → <b>keresés</b> → <b>rerank</b> (sorba rendezés) → <b>válasz-generálás</b>.</p>
+      <b>Mire figyelj?</b><p>A legmagasabb szelet a gyorsítás iránya. Ha egy lépés hirtelen megnő, az adott szolgáltató lassul (OpenRouter-modell).</p></div>
+  </div>
+
+  <div class="grid-2">
+    <div><div class="chart-demo"><h4>Teljes válaszidő eloszlása</h4><div class="cap">Hány válasz készült el 0–1, 1–2 … másodperc alatt.</div><svg viewBox="0 0 560 230" role="img" aria-label="Teljes válaszidő eloszlása"><g class="grid"><line x1="44" x2="546" y1="200.0" y2="200.0"/><text x="38" y="204.0" text-anchor="end">0</text><line x1="44" x2="546" y1="154.0" y2="154.0"/><text x="38" y="158.0" text-anchor="end">5</text><line x1="44" x2="546" y1="108.0" y2="108.0"/><text x="38" y="112.0" text-anchor="end">10</text><line x1="44" x2="546" y1="62.0" y2="62.0"/><text x="38" y="66.0" text-anchor="end">15</text><line x1="44" x2="546" y1="16.0" y2="16.0"/><text x="38" y="20.0" text-anchor="end">20</text></g><text x="71.9" y="220" text-anchor="middle">0–1</text><text x="127.7" y="220" text-anchor="middle">1–2</text><path d="M171.4,200.0 V167.2 Q171.4,163.2 175.4,163.2 H191.4 Q195.4,163.2 195.4,167.2 V200.0 Z" fill="var(--s1)" data-tip="&lt;b&gt;2–3&lt;/b&gt;&lt;br&gt;Válasz: 4"/><text x="183.4" y="220" text-anchor="middle">2–3</text><path d="M227.2,200.0 V38.4 Q227.2,34.4 231.2,34.4 H247.2 Q251.2,34.4 251.2,38.4 V200.0 Z" fill="var(--s1)" data-tip="&lt;b&gt;3–4&lt;/b&gt;&lt;br&gt;Válasz: 18"/><text x="239.2" y="220" text-anchor="middle">3–4</text><path d="M283.0,200.0 V47.6 Q283.0,43.6 287.0,43.6 H303.0 Q307.0,43.6 307.0,47.6 V200.0 Z" fill="var(--s1)" data-tip="&lt;b&gt;4–5&lt;/b&gt;&lt;br&gt;Válasz: 17"/><text x="295.0" y="220" text-anchor="middle">4–5</text><path d="M338.8,200.0 V121.2 Q338.8,117.2 342.8,117.2 H358.8 Q362.8,117.2 362.8,121.2 V200.0 Z" fill="var(--s1)" data-tip="&lt;b&gt;5–6&lt;/b&gt;&lt;br&gt;Válasz: 9"/><text x="350.8" y="220" text-anchor="middle">5–6</text><path d="M394.6,200.0 V139.6 Q394.6,135.6 398.6,135.6 H414.6 Q418.6,135.6 418.6,139.6 V200.0 Z" fill="var(--s1)" data-tip="&lt;b&gt;6–7&lt;/b&gt;&lt;br&gt;Válasz: 7"/><text x="406.6" y="220" text-anchor="middle">6–7</text><path d="M450.3,200.0 V158.0 Q450.3,154.0 454.3,154.0 H470.3 Q474.3,154.0 474.3,158.0 V200.0 Z" fill="var(--s1)" data-tip="&lt;b&gt;7–8&lt;/b&gt;&lt;br&gt;Válasz: 5"/><text x="462.3" y="220" text-anchor="middle">7–8</text><path d="M506.1,200.0 V121.2 Q506.1,117.2 510.1,117.2 H526.1 Q530.1,117.2 530.1,121.2 V200.0 Z" fill="var(--s1)" data-tip="&lt;b&gt;8+&lt;/b&gt;&lt;br&gt;Válasz: 9"/><text x="518.1" y="220" text-anchor="middle">8+</text><path class="anno-line" d="M518.1,113.2 L488.1,97.2"/><circle cx="518.1" cy="113.2" r="3" fill="var(--text-2)"/><text class="anno" x="484.1" y="93.2" text-anchor="end">lassú „farok”</text></svg></div></div>
+    <div class="card" style="margin-top:12px"><b>Mit mutat?</b><p>A válaszidők eloszlását (hisztogram): a legtöbb válasz itt 3–5 mp alatt kész.</p>
+      <b>Mire figyelj?</b><p>A jobb szélső oszlop (8+ mp) a lassú „farok”: ha nő, a felhasználók türelmetlenek lesznek. A <b>P95</b> a Monitoring fülön ezt egy számmal mutatja.</p></div>
+  </div>
+
+  <div class="grid-2">
+    <div><div class="chart-demo"><h4>Keresési biztonság (rerank-pont)</h4><div class="cap">A legjobb forrás relevancia-pontja (0–1) kérdésenként; szaggatott: a küszöb.</div><svg viewBox="0 0 560 230" role="img" aria-label="Keresési biztonság (rerank-pont)"><g class="grid"><line x1="44" x2="546" y1="200.0" y2="200.0"/><text x="38" y="204.0" text-anchor="end">0</text><line x1="44" x2="546" y1="154.0" y2="154.0"/><text x="38" y="158.0" text-anchor="end">12,5</text><line x1="44" x2="546" y1="108.0" y2="108.0"/><text x="38" y="112.0" text-anchor="end">25</text><line x1="44" x2="546" y1="62.0" y2="62.0"/><text x="38" y="66.0" text-anchor="end">37,5</text><line x1="44" x2="546" y1="16.0" y2="16.0"/><text x="38" y="20.0" text-anchor="end">50</text></g><text x="69.1" y="220" text-anchor="middle">0,0</text><text x="119.3" y="220" text-anchor="middle">0,1</text><path d="M157.5,200.0 V181.9 Q157.5,177.9 161.5,177.9 H177.5 Q181.5,177.9 181.5,181.9 V200.0 Z" fill="var(--s1)" data-tip="&lt;b&gt;0,2&lt;/b&gt;&lt;br&gt;Kérdés: 6"/><text x="169.5" y="220" text-anchor="middle">0,2</text><path d="M207.7,200.0 V200.0 Q207.7,196.3 211.4,196.3 H228.0 Q231.7,196.3 231.7,200.0 V200.0 Z" fill="var(--s1)" data-tip="&lt;b&gt;0,3&lt;/b&gt;&lt;br&gt;Kérdés: 1"/><text x="219.7" y="220" text-anchor="middle">0,3</text><path d="M257.9,200.0 V196.6 Q257.9,192.6 261.9,192.6 H277.9 Q281.9,192.6 281.9,196.6 V200.0 Z" fill="var(--s1)" data-tip="&lt;b&gt;0,4&lt;/b&gt;&lt;br&gt;Kérdés: 2"/><text x="269.9" y="220" text-anchor="middle">0,4</text><path d="M308.1,200.0 V189.3 Q308.1,185.3 312.1,185.3 H328.1 Q332.1,185.3 332.1,189.3 V200.0 Z" fill="var(--s1)" data-tip="&lt;b&gt;0,5&lt;/b&gt;&lt;br&gt;Kérdés: 4"/><text x="320.1" y="220" text-anchor="middle">0,5</text><path d="M358.3,200.0 V189.3 Q358.3,185.3 362.3,185.3 H378.3 Q382.3,185.3 382.3,189.3 V200.0 Z" fill="var(--s1)" data-tip="&lt;b&gt;0,6&lt;/b&gt;&lt;br&gt;Kérdés: 4"/><text x="370.3" y="220" text-anchor="middle">0,6</text><path d="M408.5,200.0 V178.2 Q408.5,174.2 412.5,174.2 H428.5 Q432.5,174.2 432.5,178.2 V200.0 Z" fill="var(--s1)" data-tip="&lt;b&gt;0,7&lt;/b&gt;&lt;br&gt;Kérdés: 7"/><text x="420.5" y="220" text-anchor="middle">0,7</text><path d="M458.7,200.0 V148.8 Q458.7,144.8 462.7,144.8 H478.7 Q482.7,144.8 482.7,148.8 V200.0 Z" fill="var(--s1)" data-tip="&lt;b&gt;0,8&lt;/b&gt;&lt;br&gt;Kérdés: 15"/><text x="470.7" y="220" text-anchor="middle">0,8</text><path d="M508.9,200.0 V78.9 Q508.9,74.9 512.9,74.9 H528.9 Q532.9,74.9 532.9,78.9 V200.0 Z" fill="var(--s1)" data-tip="&lt;b&gt;0,9&lt;/b&gt;&lt;br&gt;Kérdés: 34"/><text x="520.9" y="220" text-anchor="middle">0,9</text><line x1="119.3" x2="119.3" y1="16" y2="200" stroke="var(--text-2)" stroke-dasharray="4 3"/><text class="anno" x="124.3" y="26">küszöb 0,15</text><path class="anno-line" d="M169.5,173.9 L199.5,147.9"/><circle cx="169.5" cy="173.9" r="3" fill="var(--text-2)"/><text class="anno" x="203.5" y="143.9" text-anchor="start">bizonytalan zóna</text></svg></div></div>
+    <div class="card" style="margin-top:12px"><b>Mit mutat?</b><p>Mennyire biztos a keresés: a reranker (Cohere) 0–1 közötti pontot ad a legjobb találatra. A <b>küszöb (0,15)</b> alatt nincs válasz – „nem találtam”.</p>
+      <b>Mire figyelj?</b><p>A jobb oldal (0,8–1,0) a magabiztos találat. A küszöb közelében (0,2–0,4) nagyobb a tévedés esélye – ezeket a válaszokat érdemes szúrópróbaszerűen ellenőrizni.</p>
+      <b>Melyik kérdés van egy oszlopban?</b><p><b>Kattints az oszlopra:</b> alatta megjelenik a sáv kérdéseinek listája (a küszöbhöz legközelebbi elöl) – kérdés, átírt
+      keresőkérdés, a legjobb forrás (PDF az adott oldalon), kimenet, 👍/👎, <b>🔎 Phoenix-trace</b>, és <b>➕ Felvétel a mérésbe</b> / <b>▶ Ellenőrzés most</b>, mint a
+      Visszajelzések fülön. A küszöb alatti („nem találtam”) kérdések nem itt, hanem a Megválaszolatlan kérdések listájában vannak.</p></div>
+  </div>
+
+  <div class="grid-2">
+    <div><div class="chart-demo"><h4>Kérdések útmutatónként</h4><div class="cap">Melyik útmutatóból válaszol a legtöbbször (hivatkozott forrás).</div><div style="display:grid;grid-template-columns:minmax(110px,40%) 1fr;gap:8px;align-items:center;font-size:12.5px;margin:5px 0"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text-2)">Y3.2 Iperespresso kávégép</span><span style="display:flex;align-items:center;gap:6px"><span data-tip="&lt;b&gt;Y3.2 Iperespresso kávégép&lt;/b&gt;&lt;br&gt;Kérdés: 11&lt;br&gt;👍 3 · 👎 0" style="height:14px;width:100.0%;background:var(--s1);border-radius:0 4px 4px 0;display:block"></span><span style="font-variant-numeric:tabular-nums;color:var(--text-2)">11</span></span></div><div style="display:grid;grid-template-columns:minmax(110px,40%) 1fr;gap:8px;align-items:center;font-size:12.5px;margin:5px 0"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text-2)">RC Cheetah autó</span><span style="display:flex;align-items:center;gap:6px"><span data-tip="&lt;b&gt;RC Cheetah autó&lt;/b&gt;&lt;br&gt;Kérdés: 7&lt;br&gt;👍 2 · 👎 1" style="height:14px;width:63.6%;background:var(--s1);border-radius:0 4px 4px 0;display:block"></span><span style="font-variant-numeric:tabular-nums;color:var(--text-2)">7</span></span></div><div style="display:grid;grid-template-columns:minmax(110px,40%) 1fr;gap:8px;align-items:center;font-size:12.5px;margin:5px 0"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text-2)">Yettel TV</span><span style="display:flex;align-items:center;gap:6px"><span data-tip="&lt;b&gt;Yettel TV&lt;/b&gt;&lt;br&gt;Kérdés: 7&lt;br&gt;👍 1 · 👎 0" style="height:14px;width:63.6%;background:var(--s1);border-radius:0 4px 4px 0;display:block"></span><span style="font-variant-numeric:tabular-nums;color:var(--text-2)">7</span></span></div><div style="display:grid;grid-template-columns:minmax(110px,40%) 1fr;gap:8px;align-items:center;font-size:12.5px;margin:5px 0"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text-2)">Saeco Royal Digital</span><span style="display:flex;align-items:center;gap:6px"><span data-tip="&lt;b&gt;Saeco Royal Digital&lt;/b&gt;&lt;br&gt;Kérdés: 6&lt;br&gt;👍 0 · 👎 2" style="height:14px;width:54.5%;background:var(--s1);border-radius:0 4px 4px 0;display:block"></span><span style="font-variant-numeric:tabular-nums;color:var(--text-2)">6</span></span></div><div style="display:grid;grid-template-columns:minmax(110px,40%) 1fr;gap:8px;align-items:center;font-size:12.5px;margin:5px 0"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text-2)">JURA Impressa S9</span><span style="display:flex;align-items:center;gap:6px"><span data-tip="&lt;b&gt;JURA Impressa S9&lt;/b&gt;&lt;br&gt;Kérdés: 5&lt;br&gt;👍 2 · 👎 0" style="height:14px;width:45.5%;background:var(--s1);border-radius:0 4px 4px 0;display:block"></span><span style="font-variant-numeric:tabular-nums;color:var(--text-2)">5</span></span></div><div style="display:grid;grid-template-columns:minmax(110px,40%) 1fr;gap:8px;align-items:center;font-size:12.5px;margin:5px 0"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text-2)">LG LED TV</span><span style="display:flex;align-items:center;gap:6px"><span data-tip="&lt;b&gt;LG LED TV&lt;/b&gt;&lt;br&gt;Kérdés: 4&lt;br&gt;👍 1 · 👎 0" style="height:14px;width:36.4%;background:var(--s1);border-radius:0 4px 4px 0;display:block"></span><span style="font-variant-numeric:tabular-nums;color:var(--text-2)">4</span></span></div></div></div>
+    <div class="card" style="margin-top:12px"><b>Mit mutat?</b><p>A legtöbbet használt útmutatókat; fölé állva a 👍/👎 számot.</p>
+      <b>Mire figyelj?</b><p>Ha egy sokat használt útmutatónál sok a 👎 (itt: Saeco), azt nézd meg elsőként a Dokumentumok fülön (képek, szövegrészletek).</p></div>
+  </div>
+
+  <div class="grid-2">
+    <div><div class="chart-demo"><h4>Költség naponta, célonként (USD)</h4><div class="cap">A teljes OpenRouter-költség lépésenként.</div><div class="legend"><span><i style="background:var(--s1)"></i>Válasz</span><span><i style="background:var(--s2)"></i>Átírás</span><span><i style="background:var(--s3)"></i>Keresés (embedding, rerank)</span><span><i style="background:var(--s4)"></i>Beolvasás (VLM, embedding)</span><span><i style="background:var(--s5)"></i>Mérés (LLM-bíró)</span></div><svg viewBox="0 0 560 230" role="img" aria-label="Költség naponta, célonként (USD)"><g class="grid"><line x1="44" x2="546" y1="200.0" y2="200.0"/><text x="38" y="204.0" text-anchor="end">$0.00</text><line x1="44" x2="546" y1="154.0" y2="154.0"/><text x="38" y="158.0" text-anchor="end">$0.12</text><line x1="44" x2="546" y1="108.0" y2="108.0"/><text x="38" y="112.0" text-anchor="end">$0.25</text><line x1="44" x2="546" y1="62.0" y2="62.0"/><text x="38" y="66.0" text-anchor="end">$0.38</text><line x1="44" x2="546" y1="16.0" y2="16.0"/><text x="38" y="20.0" text-anchor="end">$0.50</text></g><path d="M115.7,200.0 V119.4 Q115.7,115.4 119.7,115.4 H135.7 Q139.7,115.4 139.7,119.4 V200.0 Z" fill="var(--s4)" data-tip="&lt;b&gt;10.24.&lt;/b&gt;&lt;br&gt;Válasz: $0.00&lt;br&gt;Átírás: $0.00&lt;br&gt;Keresés (embedding, rerank): $0.00&lt;br&gt;Beolvasás (VLM, embedding): $0.23&lt;br&gt;Mérés (LLM-bíró): $0.00"/><text x="127.7" y="220" text-anchor="middle">10.24.</text><path d="M283.0,200.0 V185.3 Q283.0,185.3 283.0,185.3 H307.0 Q307.0,185.3 307.0,185.3 V200.0 Z" fill="var(--s1)" data-tip="&lt;b&gt;10.25.&lt;/b&gt;&lt;br&gt;Válasz: $0.04&lt;br&gt;Átírás: $0.02&lt;br&gt;Keresés (embedding, rerank): $0.35&lt;br&gt;Beolvasás (VLM, embedding): $0.00&lt;br&gt;Mérés (LLM-bíró): $0.07"/><path d="M283.0,183.3 V177.9 Q283.0,177.9 283.0,177.9 H307.0 Q307.0,177.9 307.0,177.9 V183.3 Z" fill="var(--s2)" data-tip="&lt;b&gt;10.25.&lt;/b&gt;&lt;br&gt;Válasz: $0.04&lt;br&gt;Átírás: $0.02&lt;br&gt;Keresés (embedding, rerank): $0.35&lt;br&gt;Beolvasás (VLM, embedding): $0.00&lt;br&gt;Mérés (LLM-bíró): $0.07"/><path d="M283.0,175.9 V49.1 Q283.0,49.1 283.0,49.1 H307.0 Q307.0,49.1 307.0,49.1 V175.9 Z" fill="var(--s3)" data-tip="&lt;b&gt;10.25.&lt;/b&gt;&lt;br&gt;Válasz: $0.04&lt;br&gt;Átírás: $0.02&lt;br&gt;Keresés (embedding, rerank): $0.35&lt;br&gt;Beolvasás (VLM, embedding): $0.00&lt;br&gt;Mérés (LLM-bíró): $0.07"/><path d="M283.0,47.1 V27.4 Q283.0,23.4 287.0,23.4 H303.0 Q307.0,23.4 307.0,27.4 V47.1 Z" fill="var(--s5)" data-tip="&lt;b&gt;10.25.&lt;/b&gt;&lt;br&gt;Válasz: $0.04&lt;br&gt;Átírás: $0.02&lt;br&gt;Keresés (embedding, rerank): $0.35&lt;br&gt;Beolvasás (VLM, embedding): $0.00&lt;br&gt;Mérés (LLM-bíró): $0.07"/><text x="295.0" y="220" text-anchor="middle">10.25.</text><path d="M450.3,200.0 V189.0 Q450.3,189.0 450.3,189.0 H474.3 Q474.3,189.0 474.3,189.0 V200.0 Z" fill="var(--s1)" data-tip="&lt;b&gt;10.26.&lt;/b&gt;&lt;br&gt;Válasz: $0.03&lt;br&gt;Átírás: $0.01&lt;br&gt;Keresés (embedding, rerank): $0.06&lt;br&gt;Beolvasás (VLM, embedding): $0.00&lt;br&gt;Mérés (LLM-bíró): $0.00"/><path d="M450.3,187.0 V185.3 Q450.3,185.3 450.3,185.3 H474.3 Q474.3,185.3 474.3,185.3 V187.0 Z" fill="var(--s2)" data-tip="&lt;b&gt;10.26.&lt;/b&gt;&lt;br&gt;Válasz: $0.03&lt;br&gt;Átírás: $0.01&lt;br&gt;Keresés (embedding, rerank): $0.06&lt;br&gt;Beolvasás (VLM, embedding): $0.00&lt;br&gt;Mérés (LLM-bíró): $0.00"/><path d="M450.3,183.3 V167.2 Q450.3,163.2 454.3,163.2 H470.3 Q474.3,163.2 474.3,167.2 V183.3 Z" fill="var(--s3)" data-tip="&lt;b&gt;10.26.&lt;/b&gt;&lt;br&gt;Válasz: $0.03&lt;br&gt;Átírás: $0.01&lt;br&gt;Keresés (embedding, rerank): $0.06&lt;br&gt;Beolvasás (VLM, embedding): $0.00&lt;br&gt;Mérés (LLM-bíró): $0.00"/><text x="462.3" y="220" text-anchor="middle">10.26.</text><path class="anno-line" d="M295.0,19.4 L335.0,19.4"/><circle cx="295.0" cy="19.4" r="3" fill="var(--text-2)"/><text class="anno" x="339.0" y="15.4" text-anchor="start">a rerank a legdrágább</text></svg></div></div>
+    <div class="card" style="margin-top:12px"><b>Mit mutat?</b><p>Mire megy el a pénz. A <b>beolvasás</b> egyszeri (új útmutatónál), a többi a forgalommal nő.</p>
+      <b>Mire figyelj?</b><p>Ebben a projektben a <b>rerank</b> (Cohere) a legnagyobb tétel – drágább, mint maga a válasz. Ha nő a forgalom, ezt érdemes optimalizálni (kevesebb jelölt).</p></div>
+  </div>
+
+  <h3>Megválaszolatlan kérdések</h3>
+  <div class="card"><ul style="margin:0;padding-left:18px;font-size:14px">
+    <li><span class="pill">10.25.</span> Hogyan kell beállítani a Samsung mosógép centrifuga-fordulatszámát?</li>
+    <li><span class="pill">10.25.</span> Milyen gumiabroncsnyomás ajánlott a Suzuki autóhoz?</li></ul>
+    <p class="tipbox">A legutóbbi „nem találtam” kérdések. Itt: nincs Samsung-útmutató, a Suzuki-leírás pedig nem említ guminyomást – ez <b>helyes</b> viselkedés, de jelzi, mit érdemes feltölteni.</p></div>
+</section>
+
+<section id="dokumentumok" data-nav="Dokumentumok" data-group="A fülek">
+  <h2>📄 Dokumentumok</h2>
+  <p class="sub">Az útmutatók kezelése: feltöltés, állapot, részletek, javítás.</p>
+  <div class="grid-3">
+    <div class="card"><b>⬆️ PDF feltöltése</b><p>Húzd a fájlokat a szaggatott keretbe, vagy „válaszd ki őket”. Max. 200 MB / fájl, csak PDF. Ugyanazt a fájlt kétszer nem veszi fel (tartalom alapján ismeri fel).</p></div>
+    <div class="card"><b>📁 Kezdő mappa importálása</b><p>A szerveren lévő <code>hasznalati_utmutatok</code> mappa összes PDF-jét felveszi (első telepítéskor).</p></div>
+    <div class="card"><b>♻️ Mind újraindexelése</b><p>Minden útmutató szövegrészleteit újra feldarabolja és beágyazza (pl. beállítás-változás után). OCR-t nem futtat újra.</p></div>
+  </div>
+  <h3>Mi történik feltöltés után? (kattints a lépésekre)</h3>
+  <div class="pipeline"><div class="psteps">
+    <button class="pstep" type="button"><span class="ic">⏳</span><b>sorban áll</b><small>vár a háttér-feldolgozóra</small><template><b>Sorban áll.</b> A feltöltött fájl egy várólistára kerül; a háttér-feldolgozó (worker) egyesével veszi fel. Több fájlnál ez percekig is tarthat – a táblázat 3 mp-enként frissül.</template></button>
+    <button class="pstep" type="button"><span class="ic">🔍</span><b>beolvasás</b><small>Docling + OCR</small><template><b>Beolvasás (Docling + OCR).</b> Felismeri a fejezeteket, táblázatokat, képeket. Ha egy oldalon nincs szövegréteg (beszkennelt kép), <b>OCR</b>-rel olvassa be (Tesseract, magyar + angol). Ez a leglassabb lépés: oldalanként ~1–3 mp.</template></button>
+    <button class="pstep" type="button"><span class="ic">🖼️</span><b>képek</b><small>szűrés + leírás</small><template><b>Képek.</b> Kiszűri a kicsi és ismétlődő képeket (logók), a maradékról egy képfelismerő MI (<b>VLM</b>) rövid leírást ír – így a képekre is lehet keresni, és a válasz alatt megjelennek.</template></button>
+    <button class="pstep" type="button"><span class="ic">🧩</span><b>indexelés</b><small>darabolás + beágyazás</small><template><b>Indexelés.</b> A szöveget fejezetenként kisebb <b>részletekre (chunk)</b> bontja, és mindegyikből vektort készít (<b>embedding</b>) – ezek alapján keres a chat.</template></button>
+    <button class="pstep" type="button"><span class="ic">✅</span><b>kész</b><small>kérdezhető</small><template><b>Kész.</b> Az útmutatóból már lehet kérdezni. Ha <span class="pill red">hiba</span> jelenik meg, a sorban rövid hibaüzenet áll – a ↻ gombbal újra lehet próbálni.</template></button>
+  </div><div class="pdetail"></div></div>
+
+  <h3>A táblázat oszlopai</h3>
+  <div class="tbl"><table class="t">
+    <tr><th>Oszlop</th><th>Jelentés</th></tr>
+    <tr><td>Útmutató</td><td>Cím (MI-vel kinyerve, kézzel javítható) · terméktípus · fájlnév. A címre kattintva megnyílik a részlet-panel.</td></tr>
+    <tr><td>Állapot</td><td><span class="pill orange">sorban áll / beolvasás / képek / indexelés</span> <span class="pill green">kész</span> <span class="pill red">hiba</span></td></tr>
+    <tr><td>OCR</td><td><span class="pill orange">teljes OCR</span> = teljesen szkennelt PDF · <span class="pill">3 oldal</span> = ennyi oldal volt képalapú · „–” = szöveges PDF.</td></tr>
+    <tr><td>Chunk</td><td>Hány szövegrészletre bontotta (a keresés egysége).</td></tr>
+    <tr><td>Kép</td><td>Hány kép látható a chatben (a kiszűrtek nélkül).</td></tr>
+    <tr><td>Beolvasás</td><td>Mennyi ideig tartott (másodperc).</td></tr>
+    <tr><td>Műveletek</td><td><b>PDF ↗</b> megnyitás · <b>↻</b> teljes újrafeldolgozás · <b>🗑</b> törlés (a chatből is eltűnik).</td></tr>
+  </table></div>
+
+  <h3>Részlet-panel (kattints egy útmutató címére)</h3>
+  <div class="tabs"><div class="tab-btns"><button type="button">Chunkok</button><button type="button">Képek</button><button type="button">Feldolgozás</button><button type="button">Adatok szerkesztése</button></div>
+    <div class="tab-panel"><p>Az útmutató összes szövegrészlete sorrendben: oldal, fejezet, tokenszám. A legördülőben választhatsz <b>hibrid</b>
+      (fejezetek szerint) és <b>fix</b> (egyforma hosszú darabok) között – a chat a hibridet használja. Itt ellenőrizheted, hogy az OCR jól
+      olvasta-e be a szöveget.</p></div>
+    <div class="tab-panel"><p>Az összes kivágott kép a leírásával. Az áttetsző képeket a szűrő elrejtette (ok: kicsi / ismétlődő). Az
+      <b>Elrejtés</b> / <b>Megjelenítés</b> gombbal kézzel dönthetsz – pl. egy félrevezető kép ne jelenjen meg a válaszokban. Utána az útmutató automatikusan újraindexelődik.</p></div>
+    <div class="tab-panel"><p>Technikai adatok: beolvasási mód (<code>standard</code> / <code>mixed</code> / <code>fullocr</code>), időtartamok, a részletek és
+      képek száma, a feldolgozási feladatok listája hibaüzenetekkel.</p></div>
+    <div class="tab-panel"><p>A <b>cím</b>, <b>terméktípus</b> és <b>márka</b> kézzel javítható. Ezek minden szövegrészlet elé bekerülnek a keresésnél – ezért
+      mentés után az útmutató újraindexelődik, és a kézi javítás egy későbbi újrafeldolgozásnál is megmarad.</p></div>
+  </div>
+  <div class="tbl"><table class="t">
+    <tr><th></th><th>↻ Újrafeldolgozás</th><th>Újraindexelés</th></tr>
+    <tr><td>Mit csinál?</td><td>Mindent elölről: beolvasás + OCR + képek + indexelés</td><td>Csak a darabolás + beágyazás</td></tr>
+    <tr><td>Mikor?</td><td>Rossz OCR, hiányzó szöveg, hiba után</td><td>Beállítás- vagy metaadat-változás után</td></tr>
+    <tr><td>Idő / költség</td><td>percek, ~1–3 ¢ (képleírás)</td><td>másodpercek, ~0,1 ¢</td></tr>
+  </table></div>
+</section>
+
+<section id="visszajelzesek" data-nav="Visszajelzések" data-group="A fülek">
+  <h2>💬 Visszajelzések</h2>
+  <p class="sub">Amit a felhasználók a válaszok alatt jeleztek – és amit az MI ebből kiolvas.</p>
+  <div class="grid-2">
+    <div class="card"><b>Mutatók</b><p><b>értékelt</b> = hány válaszra jött 👍/👎 (zárójelben: az összes válasz hány %-a) · <b>elégedettség</b> = 👍 / összes értékelés.</p></div>
+    <div class="card"><b>👎 hivatkozott útmutatónként</b><p>Mely útmutatók részleteire hivatkozó válaszok kaptak 👎-t – ez mutatja, hol a gond.</p></div>
+  </div>
+  <div class="chart-demo"><h4>Negatív értékelés okai (példa)</h4><div class="cap">A 👎 mellé választható okok megoszlása.</div><div style="display:grid;grid-template-columns:minmax(110px,40%) 1fr;gap:8px;align-items:center;font-size:12.5px;margin:5px 0"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text-2)">Hiányos</span><span style="display:flex;align-items:center;gap:6px"><span data-tip="&lt;b&gt;Hiányos&lt;/b&gt;&lt;br&gt;Jelölés: 9" style="height:14px;width:100.0%;background:var(--s2);border-radius:0 4px 4px 0;display:block"></span><span style="font-variant-numeric:tabular-nums;color:var(--text-2)">9</span></span></div><div style="display:grid;grid-template-columns:minmax(110px,40%) 1fr;gap:8px;align-items:center;font-size:12.5px;margin:5px 0"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text-2)">Nem találta</span><span style="display:flex;align-items:center;gap:6px"><span data-tip="&lt;b&gt;Nem találta&lt;/b&gt;&lt;br&gt;Jelölés: 6" style="height:14px;width:66.7%;background:var(--s2);border-radius:0 4px 4px 0;display:block"></span><span style="font-variant-numeric:tabular-nums;color:var(--text-2)">6</span></span></div><div style="display:grid;grid-template-columns:minmax(110px,40%) 1fr;gap:8px;align-items:center;font-size:12.5px;margin:5px 0"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text-2)">Téves</span><span style="display:flex;align-items:center;gap:6px"><span data-tip="&lt;b&gt;Téves&lt;/b&gt;&lt;br&gt;Jelölés: 3" style="height:14px;width:33.3%;background:var(--s2);border-radius:0 4px 4px 0;display:block"></span><span style="font-variant-numeric:tabular-nums;color:var(--text-2)">3</span></span></div><div style="display:grid;grid-template-columns:minmax(110px,40%) 1fr;gap:8px;align-items:center;font-size:12.5px;margin:5px 0"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text-2)">Rossz kép</span><span style="display:flex;align-items:center;gap:6px"><span data-tip="&lt;b&gt;Rossz kép&lt;/b&gt;&lt;br&gt;Jelölés: 2" style="height:14px;width:22.2%;background:var(--s2);border-radius:0 4px 4px 0;display:block"></span><span style="font-variant-numeric:tabular-nums;color:var(--text-2)">2</span></span></div><div style="display:grid;grid-template-columns:minmax(110px,40%) 1fr;gap:8px;align-items:center;font-size:12.5px;margin:5px 0"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text-2)">Rossz forrás</span><span style="display:flex;align-items:center;gap:6px"><span data-tip="&lt;b&gt;Rossz forrás&lt;/b&gt;&lt;br&gt;Jelölés: 2" style="height:14px;width:22.2%;background:var(--s2);border-radius:0 4px 4px 0;display:block"></span><span style="font-variant-numeric:tabular-nums;color:var(--text-2)">2</span></span></div><div style="display:grid;grid-template-columns:minmax(110px,40%) 1fr;gap:8px;align-items:center;font-size:12.5px;margin:5px 0"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text-2)">Nehezen érthető</span><span style="display:flex;align-items:center;gap:6px"><span data-tip="&lt;b&gt;Nehezen érthető&lt;/b&gt;&lt;br&gt;Jelölés: 1" style="height:14px;width:11.1%;background:var(--s2);border-radius:0 4px 4px 0;display:block"></span><span style="font-variant-numeric:tabular-nums;color:var(--text-2)">1</span></span></div></div>
+  <div class="tbl"><table class="t">
+    <tr><th>Ok</th><th>Mit jelent általában?</th><th>Hol javítsd?</th></tr>
+    <tr><td>Hiányos</td><td>A válasz kihagyott lépést / részt</td><td>több forrás (<code>TOP_K</code>), prompt</td></tr>
+    <tr><td>Nem találta</td><td>„nem találtam”, pedig benne van</td><td>Dokumentumok: OCR, újrafeldolgozás</td></tr>
+    <tr><td>Téves</td><td>rossz információ</td><td>a hivatkozott forrás ellenőrzése</td></tr>
+    <tr><td>Rossz kép / rossz forrás</td><td>nem illő ábra / útmutató</td><td>kép elrejtése · címek javítása</td></tr>
+    <tr><td>Nehezen érthető</td><td>túl hosszú, szakszavas</td><td>system prompt (programozó)</td></tr>
+  </table></div>
+  <h3>LLM-es témaelemzés</h3>
+  <p>Az <b>„Új elemzés”</b> gomb az utolsó (max. 200) negatív visszajelzést egy MI-vel csoportosítja. Az eredmény (példa):</p>
+  <div class="card" style="border-left:4px solid var(--accent-2)">
+    <p style="margin-top:0"><b>Összefoglaló:</b> a negatív visszajelzések fele a kávégépek vízkőtelenítésére vonatkozik, ahol a válasz kihagyta a gép-specifikus lépéseket.</p>
+    <div class="grid-2">
+      <div class="card" style="margin:0;box-shadow:none"><b>Hiányos vízkőtelenítési lépések</b> <span class="pill">5 db</span><p style="font-size:13.5px">A válasz nem említi a vízkőoldó tabletta számát.</p><p style="font-size:13.5px;color:var(--accent-ink)"><b>➜ Javaslat:</b> a JURA-útmutatóknál ellenőrizd a 16–17. oldal OCR-jét.</p></div>
+      <div class="card" style="margin:0;box-shadow:none"><b>Rossz kép a válasz alatt</b> <span class="pill">2 db</span><p style="font-size:13.5px">Logó jelent meg ábra helyett.</p><p style="font-size:13.5px;color:var(--accent-ink)"><b>➜ Javaslat:</b> a Saeco-útmutató logóját rejtsd el.</p></div>
+    </div>
+  </div>
+  <p class="tipbox">A lista szűrhető értékelésre (Mind / 👎 / 👍) és állapotra. Minden tétel: kérdés, okok, megjegyzés („Mit vártál volna?”), és lenyitva a válasz.</p>
+
+  <h3>Egy 👎 kivizsgálása – lépésről lépésre</h3>
+  <p>A visszajelzés magától nem javít semmit: azt mutatja meg, <b>hol</b> romlott el a válasz. Minden tétel alatt ott van, ami a döntéshez kell:</p>
+  <div class="tbl"><table class="t">
+    <tr><th>Elem</th><th>Mire jó?</th></tr>
+    <tr><td><b>Keresőkérdés</b></td><td>A kérdés-átíró által készített önálló kérdés – ha ez félreértette a kérdést, már itt elcsúszott.</td></tr>
+    <tr><td><b>Források táblázata</b></td><td>Útmutató, oldal (kattintásra a PDF azon az oldalon), <b>rerank-pont</b>, és hogy a válasz hivatkozott-e rá. A küszöb közeli pont narancs.</td></tr>
+    <tr><td><b>💡 Tipp</b></td><td>Az adatokból: <i>nem volt forrás</i> → beolvasás vagy keresés; <i>nem találta / rossz forrás</i> → keresés; <i>téves / hiányos</i> → ha a jó részlet a források között van, a válasz (prompt).</td></tr>
+    <tr><td><b>🔎 Phoenix-trace ↗</b></td><td>A válasz teljes nyoma: átírás, a keresés jelöltjei, a rerank pontjai, az LLM bemenete – itt látszik, hányadik helyen volt a jó részlet.</td></tr>
+    <tr><td><b>Állapot</b></td><td><span class="pill red">Új</span> → <span class="pill orange">Vizsgálva</span> → <span class="pill green">Javítva</span> vagy <span class="pill">Nem hiba</span>. Ha a felhasználó újraértékel, visszaáll „Új”-ra. A felső csempe a nyitott 👎-okat számolja.</td></tr>
+    <tr><td><b>Admin-megjegyzés</b></td><td>Mi volt a hiba, mit javítottál – Enterre ment.</td></tr>
+    <tr><td><b>➕ Felvétel a mérésbe</b></td><td>A kérdésből mérési eset lesz: <b>RAG</b> (elvárt útmutató + oldal – a keresést méri) vagy <b>Prompt</b> (elvárt viselkedés + kulcselemek – a választ méri, LLM-bíróval).</td></tr>
+  </table></div>
+  <div class="grid-2">
+    <div class="card"><b>A kör lezárása: mérés</b><p>A felvett esetek („fb1”, „fb2”…) a visszajelzés alatt és a lap alján, a <b>Mérési esetek visszajelzésből</b>
+      panelen vannak. A <b>▶ Ellenőrzés most</b> gomb csak azt az egy esetet futtatja, azonnal: RAG-esetnél az éles keresést (hányadik helyen jön a jó oldal,
+      pár mp), prompt-esetnél a választ + az LLM-bírót (10–20 mp). Az eredmény ✓ / ✗, lenyitva a találatok vagy a válasz. Javítás előtt és után
+      futtasd. A teljes mérés (<code>run_all.py</code>, <code>rag_eval.py</code>, <code>prompt_eval.py</code>) is futtatja őket – <b>regressziós tesztként</b>
+      jelez, ha valami újra elrontja.</p></div>
+    <div class="card"><b>Végleges felvétel a git-be</b><p>A panel „YAML” gombjai a kérdéssor formátumában másolják az eseteket. Másold őket az
+      <code>eval/datasets/rag_questions.yaml</code> / <code>prompt_cases.yaml</code> végére (programozó), majd töröld itt az esetet – különben kétszer mérődik.</p></div>
+  </div>
+</section>
+
+<section id="monitoring" data-nav="Monitoring" data-group="A fülek">
+  <h2>⏱️ Monitoring</h2>
+  <p class="sub">Sebesség és költség – a két kötelező mutató (első token, teljes idő) itt pontos számmal.</p>
+  <div class="grid-3">
+    <div class="card"><b>első token (P50 / P95)</b><p>Mennyi idő után jelenik meg a válasz <b>első szava</b>. Ez az, amit a felhasználó „várakozásként” érez. Itt ~3,5 s / ~7 s.</p></div>
+    <div class="card"><b>teljes válaszidő (P50 / P95)</b><p>A kérdés elküldésétől a válasz végéig. Itt ~4,7 s / ~10 s.</p></div>
+    <div class="card"><b>költség / válasz</b><p>Egy válasz átlagos ára (minden lépéssel együtt). Itt ~$0,0016 – ezer kérdés kb. 1,6 USD.</p></div>
+  </div>
+  <div class="callout info"><b>Mi az a P50 és P95?</b> Sorba rendezzük az összes válaszidőt. A <b>P50</b> (medián) a középső: a válaszok fele ennél gyorsabb.
+    A <b>P95</b>: a válaszok 95 %-a ennél gyorsabb – a leglassabb 5 %-ot mutatja. Az átlagnál jobb, mert egy-két nagyon lassú válasz nem torzítja.</div>
+  <h3>LLM-hívások célonként</h3>
+  <div class="tbl"><table class="t">
+    <tr><th>Cél (a táblázatban)</th><th>Mi ez?</th><th>Mikor fut?</th></tr>
+    <tr><td>kérdés-átírás</td><td>A kérdést önállóvá alakítja („és ezt hogyan?” → teljes kérdés) + kulcsszavak</td><td>minden kérdésnél</td></tr>
+    <tr><td>kérdés-embedding</td><td>A kérdés vektorrá alakítása a kereséshez</td><td>minden kérdésnél</td></tr>
+    <tr><td>rerank</td><td>A 25 jelölt sorba rendezése relevancia szerint (Cohere)</td><td>minden kérdésnél</td></tr>
+    <tr><td>válasz (stream)</td><td>A válasz megírása a forrásokból</td><td>minden kérdésnél</td></tr>
+    <tr><td>beolvasás: képleírás (VLM)</td><td>Képek leírása</td><td>feltöltéskor</td></tr>
+    <tr><td>beolvasás: embedding / metaadat</td><td>Részletek vektorai, cím és terméktípus</td><td>feltöltéskor</td></tr>
+    <tr><td>mérés: LLM-bíró</td><td>A minőségmérés értékelője</td><td>mérés futtatásakor</td></tr>
+  </table></div>
+  <p>Alatta a <b>napi költség</b> (chat vs. beolvasás) és a <b>legutóbbi 30 válasz</b> idővel, tokennel, költséggel, értékeléssel. A
+    <b>„Phoenix trace-ek ↗”</b> gomb a részletes nyomkövetést nyitja (lásd lent).</p>
+</section>
+
+<section id="meresek" data-nav="Mérések" data-group="A fülek">
+  <h2>🧪 Mérések</h2>
+  <p class="sub">A rendszer minőségének mérése három szinten – a legutóbbi eredmény szintenként.</p>
+  <div class="tabs"><div class="tab-btns"><button type="button">RAG-szint</button><button type="button">Prompt-szint</button><button type="button">Alkalmazás-szint</button></div>
+    <div class="tab-panel"><p><b>Mit mér?</b> Megtalálja-e a keresés a jó útmutató-oldalt. 30 kérdés, mindegyikhez tudjuk, melyik oldalon van a válasz.</p>
+      <div class="tbl"><table class="t"><tr><th>Mutató</th><th>Jelentés</th><th>Most</th></tr>
+        <tr><td>hit@6</td><td>A 6 találat között van-e jó</td><td><span class="pill green">1,00</span></td></tr>
+        <tr><td>MRR</td><td>Hányadik helyen az első jó (1 = mindig az első)</td><td><span class="pill green">0,92</span></td></tr>
+        <tr><td>recall@6</td><td>Az elvárt oldalak hány %-át fedi le</td><td>0,96</td></tr>
+        <tr><td>precision@6</td><td>A 6 találat hány %-a releváns</td><td>0,44</td></tr></table></div>
+      <p class="tipbox">A ~0,45-ös precision természetes: egy kérdésre 1–3 jó részlet van, a többi szomszédos részlet.</p></div>
+    <div class="tab-panel"><p><b>Mit mér?</b> 17 egykérdéses esetet a teljes láncon; egy „bíró” MI értékel.</p>
+      <div class="tbl"><table class="t"><tr><th>Mutató</th><th>Jelentés</th><th>Most</th></tr>
+        <tr><td>viselkedés helyes</td><td>Válaszol / „nem találtam” / elutasít / visszakérdez – amikor kell</td><td><span class="pill green">100 %</span></td></tr>
+        <tr><td>helyesség</td><td>A referencia kulcselemeinek hány %-a van a válaszban</td><td><span class="pill green">1,00</span></td></tr>
+        <tr><td>hallucinációs arány</td><td>Hány válaszban van forrással nem alátámasztott állítás</td><td><span class="pill green">0 %</span></td></tr>
+        <tr><td>kontextus-relevancia</td><td>Az átadott források hány %-a illik a kérdéshez</td><td>0,81</td></tr></table></div></div>
+    <div class="tab-panel"><p><b>Mit mér?</b> 12 többkérdéses „felhasználói utat”: egy szimulált felhasználó kérdez, amíg el nem éri a célját.</p>
+      <div class="tbl"><table class="t"><tr><th>Mutató</th><th>Jelentés</th><th>Most</th></tr>
+        <tr><td>célelérés</td><td>Hány útnál teljesült a felhasználó célja</td><td><span class="pill green">100 %</span></td></tr>
+        <tr><td>elégedettség (1–5)</td><td>A szimulált felhasználó szemével</td><td>4,7</td></tr>
+        <tr><td>forráshű fordulók</td><td>A válaszok hány %-a teljesen forrásból</td><td><span class="pill orange">85 %</span></td></tr>
+        <tr><td>első token / teljes idő</td><td>P50 / P95</td><td>3,4 / 7,3 s · 4,7 / 10,4 s</td></tr></table></div>
+      <p class="tipbox">A 85 %: utókérdéseknél, amikre az útmutató már nem felel, a modell néha kiegészít – ez a következő fejlesztési pont.</p></div>
+  </div>
+  <p>Az <b>„Esetek”</b> / <b>„Részletek”</b> gomb esetenként mutatja az eredményt (sorra kattintva a teljes adat). A mérést a programozó futtatja:</p>
+  <div class="cmd">docker compose exec api python /eval/run_all.py</div>
+</section>
+
+<section id="phoenix" data-nav="Phoenix röviden" data-group="Referencia">
+  <h2>🔭 Phoenix röviden</h2>
+  <p class="sub">A részletes nyomkövetés (<code>localhost:6070</code>) – egy kérdés minden lépése, ideje, tokenje, költsége.</p>
+  <div class="tbl"><table class="t">
+    <tr><th>Phoenix-projekt</th><th>Mit tartalmaz?</th></tr>
+    <tr><td><code>utmutato-asszisztens</code></td><td>Az élő chat: kérdésenként egy „trace” (átírás → keresés → rerank → válasz), a 👍/👎 visszajelzéssel.</td></tr>
+    <tr><td><code>utmutato-asszisztens-eval</code></td><td>A mérések futásai, a bíró értékeléseivel (helyesség, hallucináció…).</td></tr>
+    <tr><td><code>utmutato-asszisztens-ingest</code></td><td>A PDF-beolvasás: metaadat, képleírás, beágyazás – dokumentumonként.</td></tr>
+  </table></div>
+</section>
+
+<section id="szojegyzek" data-nav="Rövidítések, fogalmak" data-group="Referencia">
+  <h2>🔎 Rövidítések és fogalmak</h2>
+  <input class="gloss-search" type="search" placeholder="Keress: pl. P95, chunk, rerank…" aria-label="Keresés a szójegyzékben">
+  <div class="gloss">
+    <div class="gloss-item"><b>RAG</b><div class="full">Retrieval-Augmented Generation</div><p>Előbb megkeresi a releváns útmutató-részleteket, és a válasz csak ezekből készül.</p></div>
+    <div class="gloss-item"><b>Chunk (részlet)</b><div class="full">szövegdarab</div><p>Az útmutató kisebb, fejezetenkénti darabja (max. ~400 token) – a keresés egysége.</p></div>
+    <div class="gloss-item"><b>Token</b><div class="full">a szöveg egysége</div><p>Kb. ¾ szó. Az MI-szolgáltatók tokenre számláznak.</p></div>
+    <div class="gloss-item"><b>Embedding</b><div class="full">vektoros beágyazás</div><p>A szöveg „jelentését” számsorrá alakítja; a hasonló jelentésű szövegek közel kerülnek.</p></div>
+    <div class="gloss-item"><b>Dense keresés</b><div class="full">vektoros (szemantikus) keresés</div><p>Jelentés szerint keres – rokon értelmű szavakat is megtalál.</p></div>
+    <div class="gloss-item"><b>BM25</b><div class="full">kulcsszavas keresés</div><p>Pontos szavakat, típusszámokat, hibakódokat talál meg (pl. „SMV41D10EU”, „E15”).</p></div>
+    <div class="gloss-item"><b>RRF</b><div class="full">Reciprocal Rank Fusion</div><p>A két keresés (dense + BM25) rangsorát fésüli össze a helyezések alapján.</p></div>
+    <div class="gloss-item"><b>Rerank</b><div class="full">újrarangsorolás (Cohere)</div><p>Egy külön MI a 25 jelöltet a kérdéshez méri, 0–1 pontot ad, és sorba rendezi.</p></div>
+    <div class="gloss-item"><b>Küszöb (0,15)</b><div class="full">RERANK_MIN_SCORE</div><p>Az ennél gyengébb találatok kimaradnak; ha semmi sem éri el: „nem találtam”.</p></div>
+    <div class="gloss-item"><b>Top-k (6)</b><div class="full">TOP_K</div><p>Hány részletet kap meg a válaszíró MI forrásként.</p></div>
+    <div class="gloss-item"><b>OCR</b><div class="full">Optical Character Recognition</div><p>Karakterfelismerés: a beszkennelt (kép) oldalak szövegét olvassa be (Tesseract).</p></div>
+    <div class="gloss-item"><b>VLM</b><div class="full">Vision-Language Model</div><p>Képet „látó” MI – az útmutató ábráiról ír rövid leírást.</p></div>
+    <div class="gloss-item"><b>Docling</b><div class="full">PDF-feldolgozó</div><p>Felismeri az útmutató szerkezetét: fejezetek, táblázatok, képek, olvasási sorrend.</p></div>
+    <div class="gloss-item"><b>TTFT / első token</b><div class="full">Time To First Token</div><p>Mennyi idő után jelenik meg a válasz első szava.</p></div>
+    <div class="gloss-item"><b>P50 / medián</b><div class="full">50. percentilis</div><p>A válaszok fele ennél gyorsabb.</p></div>
+    <div class="gloss-item"><b>P95</b><div class="full">95. percentilis</div><p>A válaszok 95 %-a ennél gyorsabb – a lassú esetek mutatója.</p></div>
+    <div class="gloss-item"><b>USD / $</b><div class="full">amerikai dollár</div><p>Az OpenRouter dollárban számláz; a költség minden hívásnál naplózva.</p></div>
+    <div class="gloss-item"><b>OpenRouter</b><div class="full">MI-modell szolgáltató</div><p>Egy felületen át éri el a modelleket (gpt-4o-mini, bge-m3, Cohere rerank).</p></div>
+    <div class="gloss-item"><b>Trace / span</b><div class="full">nyomkövetési egység</div><p>Trace = egy kérdés teljes útja; span = egy lépése (pl. rerank).</p></div>
+    <div class="gloss-item"><b>Session</b><div class="full">munkamenet</div><p>A Phoenixben egy beszélgetés.</p></div>
+    <div class="gloss-item"><b>Hallucináció</b><div class="full">kitalált állítás</div><p>Olyan állítás a válaszban, ami nincs a forrásokban.</p></div>
+    <div class="gloss-item"><b>LLM-bíró</b><div class="full">LLM-as-a-judge</div><p>Egy MI, ami a mérésnél a válaszok minőségét értékeli.</p></div>
+    <div class="gloss-item"><b>hit@k</b><div class="full">találati arány k találatnál</div><p>A k találat között van-e legalább egy jó.</p></div>
+    <div class="gloss-item"><b>MRR</b><div class="full">Mean Reciprocal Rank</div><p>Átlagosan hányadik helyen van az első jó találat (1 = mindig az első).</p></div>
+    <div class="gloss-item"><b>Precision / recall</b><div class="full">pontosság / fedés</div><p>Precision: a találatok hány %-a jó. Recall: a jó oldalak hány %-át találta meg.</p></div>
+    <div class="gloss-item"><b>Kontextus-relevancia</b><div class="full">context relevance</div><p>Az MI-nek átadott források hány %-a illik a kérdéshez.</p></div>
+    <div class="gloss-item"><b>Szimulált forgalom</b><div class="full">mérési kérdések</div><p>A mérésekből jövő, nem valódi felhasználói kérdések – az Analitikán kikapcsolható.</p></div>
+    <div class="gloss-item"><b>Újraindexelés</b><div class="full">reindex</div><p>A részletek újradarabolása és -beágyazása OCR nélkül.</p></div>
+  </div>
+</section>
+
+<section id="teendok" data-nav="Mit tegyek, ha…" data-group="Referencia">
+  <h2>🧭 Mit tegyek, ha…</h2>
+  <details class="acc"><summary>…magas a „nem találtam” arány?</summary><div class="acc-body"><ol>
+    <li>Analitika → <b>Megválaszolatlan kérdések</b>: milyen eszközről kérdeztek?</li>
+    <li>Ha nincs ilyen útmutató: <b>töltsd fel</b> (Dokumentumok).</li>
+    <li>Ha van: Dokumentumok → az útmutató → <b>Chunkok</b>: benne van a keresett szöveg? Ha zagyva (rossz OCR): <b>↻ újrafeldolgozás</b>.</li></ol></div></details>
+  <details class="acc"><summary>…csökken az elégedettség?</summary><div class="acc-body"><ol>
+    <li>Visszajelzések → szűrő: 👎 → milyen okot jelöltek?</li>
+    <li><b>Új elemzés</b> → visszatérő témák és javaslatok.</li>
+    <li>Ha egy útmutatóhoz köthető: ellenőrizd a képeit és a részleteit; ha a válasz stílusa a gond: szólj a programozónak (system prompt).</li></ol></div></details>
+  <details class="acc"><summary>…lassú a chat?</summary><div class="acc-body"><ol>
+    <li>Analitika → <b>Válaszidő lépésenként</b>: melyik szelet nőtt meg?</li>
+    <li>Monitoring → LLM-hívások: melyik modell átlagos ideje nőtt? (Gyakran az OpenRouter-szolgáltató átmeneti lassulása.)</li>
+    <li>Phoenix → egy lassú trace megnyitása: lépésenkénti idő.</li></ol></div></details>
+  <details class="acc"><summary>…egy útmutató „hiba” állapotú?</summary><div class="acc-body"><ol>
+    <li>A hibaüzenet a sorban / a részlet-panel Feldolgozás fülén.</li>
+    <li>Próbáld újra: <b>↻</b>. Ha ismét hibás: sérült PDF lehet – nyisd meg a <b>PDF ↗</b> gombbal.</li></ol></div></details>
+  <details class="acc"><summary>…rossz kép jelenik meg a válaszok alatt?</summary><div class="acc-body"><p>Dokumentumok → az útmutató → <b>Képek</b> → a hibás képnél <b>Elrejtés</b>. Az útmutató automatikusan újraindexelődik.</p></div></details>
+  <details class="acc"><summary>…megugrott a költség?</summary><div class="acc-body"><p>Analitika → <b>Költség célonként</b>: ha a beolvasás nőtt, új útmutatók jöttek (egyszeri); ha a keresés/válasz, nőtt a forgalom. Mérést csak szükség esetén futtass (a „Mérés” szelet).</p></div></details>
+</section>
+
+</div>
+
+    <div class="wrap"><footer class="foot">Útmutató-asszisztens – RAG a magyar használati útmutatókhoz · FastAPI · pgvector · React · Phoenix · OpenRouter</footer></div>
+  </main>
+</div>
+<div id="tip" role="tooltip"></div>
+<script>
+(function(){
+  const $ = (s, r=document) => r.querySelector(s), $$ = (s, r=document) => [...r.querySelectorAll(s)];
+  const store = {get(k){try{return localStorage.getItem(k)}catch(e){return null}}, set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+
+  // ---- téma
+  const saved = store.get('docs.theme'); if (saved) document.documentElement.dataset.theme = saved;
+  $('#themeBtn').onclick = () => {
+    const cur = document.documentElement.dataset.theme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    const next = cur === 'dark' ? 'light' : 'dark';
+    document.documentElement.dataset.theme = next; store.set('docs.theme', next);
+    window.dispatchEvent(new Event('themechange'));
+  };
+
+  // ---- bal oldali menü a szakaszokból
+  const toc = $('nav.toc'); let grp = null, n = 0;
+  $$('section[data-nav]').forEach(sec => {
+    const g = sec.dataset.group;
+    if (g && g !== grp) { grp = g; const d = document.createElement('div'); d.className = 'grp'; d.textContent = g; toc.appendChild(d); }
+    n++;
+    const a = document.createElement('a'); a.href = '#' + sec.id;
+    a.innerHTML = `<span class="n">${n}</span><span>${sec.dataset.nav}</span>` + (sec.dataset.time ? `<span class="t">${sec.dataset.time}</span>` : '');
+    a.onclick = () => document.body.classList.remove('nav-open');
+    toc.appendChild(a);
+    const h2 = sec.querySelector('h2'); if (h2 && !h2.querySelector('.num')) h2.insertAdjacentHTML('afterbegin', `<span class="num">${n}</span>`);
+  });
+  const links = $$('a', toc);
+  const io = new IntersectionObserver(es => es.forEach(e => {
+    if (e.isIntersecting) links.forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#' + e.target.id));
+  }), {rootMargin: '-30% 0px -60% 0px'});
+  $$('section[data-nav]').forEach(s => io.observe(s));
+  $('.side-search').addEventListener('input', e => {
+    const q = e.target.value.toLowerCase().trim();
+    links.forEach(l => l.classList.toggle('hidden', q && !l.textContent.toLowerCase().includes(q)));
+  });
+  addEventListener('scroll', () => {
+    const h = document.documentElement; $('#progress').style.width = (h.scrollTop / Math.max(1, h.scrollHeight - h.clientHeight) * 100) + '%';
+  }, {passive: true});
+
+  // ---- kódblokkok: fejléc (fájl + sorok) + másolás + kiemelés
+  $$('figure.code').forEach(f => {
+    const head = document.createElement('div'); head.className = 'code-head';
+    head.innerHTML = `<span class="dots"><i></i><i></i><i></i></span><span class="file"></span><span class="lines"></span><span class="ttl"></span><button type="button">Másolás</button>`;
+    head.querySelector('.file').textContent = f.dataset.file;
+    head.querySelector('.lines').textContent = f.dataset.lines + '. sor';
+    head.querySelector('.ttl').textContent = f.dataset.title ? '· ' + f.dataset.title : '';
+    f.prepend(head);
+    head.querySelector('button').onclick = async (ev) => {
+      try { await navigator.clipboard.writeText(f.querySelector('code').innerText); ev.target.textContent = 'Másolva ✓'; }
+      catch (e) { ev.target.textContent = 'Nem sikerült'; }
+      setTimeout(() => ev.target.textContent = 'Másolás', 1400);
+    };
+  });
+  if (window.hljs) $$('figure.code code').forEach(c => hljs.highlightElement(c));
+  $$('.cmd').forEach(c => {
+    const txt = c.textContent.trim(); c.innerHTML = ''; const s = document.createElement('span'); s.textContent = txt; c.appendChild(s);
+    const b = document.createElement('button'); b.type = 'button'; b.textContent = 'Másolás'; c.appendChild(b);
+    b.onclick = async () => { try { await navigator.clipboard.writeText(txt); b.textContent = '✓'; } catch (e) { b.textContent = '✗'; } setTimeout(() => b.textContent = 'Másolás', 1200); };
+  });
+
+  // ---- fülek
+  $$('.tabs').forEach(t => {
+    const btns = $$('.tab-btns button', t), panels = $$('.tab-panel', t);
+    const show = i => { btns.forEach((b, j) => b.classList.toggle('on', i === j)); panels.forEach((p, j) => p.classList.toggle('on', i === j)); };
+    btns.forEach((b, i) => b.onclick = () => show(i)); show(0);
+  });
+
+  // ---- lépésdiagram
+  $$('.pipeline').forEach(p => {
+    const steps = $$('.pstep', p), det = $('.pdetail', p);
+    const show = i => { steps.forEach((s, j) => s.classList.toggle('on', i === j)); det.innerHTML = steps[i].querySelector('template').innerHTML; };
+    steps.forEach((s, i) => s.onclick = () => show(i)); if (steps.length) show(0);
+  });
+
+  // ---- kattintható képernyő-makett (hotspot)
+  $$('.hotspot').forEach(h => {
+    // a makett fix 680 px széles, és a rendelkezésre álló helyhez méreteződik (zoom) -> a számozott pontok mindig a helyükön
+    const mock = $('.mock', h); const sc = document.createElement('div'); sc.className = 'mock-scroll'; mock.before(sc); sc.appendChild(mock);
+    const hots = $$('.hot', h), info = $('.hot-info', h);
+    // a pont a hozzá tartozó zóna bal felső sarkára kerül (a zóna tényleges helyéből számolva)
+    const place = () => {
+      const z = parseFloat(mock.style.zoom) || 1, mr = mock.getBoundingClientRect();
+      hots.forEach(x => {
+        const zone = mock.querySelector(`.zone[data-zone="${x.dataset.zone}"]`); if (!zone) return;
+        const r = zone.getBoundingClientRect();
+        x.style.left = Math.max(2, (r.left - mr.left) / z - 11) + 'px';
+        x.style.top = Math.max(2, (r.top - mr.top) / z - 11) + 'px';
+      });
+    };
+    // csak valódi szélességváltozásra méretez újra (a zoom a magasságot is változtatja – így nincs ResizeObserver-hurok)
+    let lastW = -1;
+    const fit = () => { const w = sc.clientWidth; if (w === lastW) return; lastW = w; mock.style.zoom = Math.min(1.15, w / 680); place(); };
+    fit(); new ResizeObserver(fit).observe(sc);
+    const texts = hots.map(x => { const t = x.querySelector('template'); return t ? t.innerHTML : ''; });
+    const show = i => {
+      hots.forEach((x, j) => x.classList.toggle('on', i === j));
+      $$('.zone', h).forEach(z => z.classList.toggle('lit', z.dataset.zone === hots[i].dataset.zone));
+      info.innerHTML = `<h4><span class="hn">${i + 1}</span>${hots[i].dataset.title}</h4><div class="hl">${texts[i]}</div>
+        <div class="hot-nav"><button type="button" data-d="-1">‹ Előző</button><button type="button" data-d="1">Következő ›</button><span style="margin-left:auto;font-size:12px;color:var(--muted)">${i + 1} / ${hots.length}</span></div>`;
+      $$('.hot-nav button', info).forEach(b => b.onclick = () => show((i + Number(b.dataset.d) + hots.length) % hots.length));
+    };
+    hots.forEach((x, i) => { x.textContent = i + 1; x.setAttribute('aria-label', x.dataset.title); x.onclick = () => show(i); });
+    if (hots.length) show(0);
+  });
+
+  // ---- tooltip az SVG-diagramokhoz
+  const tip = $('#tip');
+  document.addEventListener('mousemove', e => {
+    const el = e.target.closest && e.target.closest('[data-tip]');
+    if (!el) { tip.classList.remove('on'); return; }
+    tip.innerHTML = el.dataset.tip; tip.classList.add('on');
+    const x = Math.min(e.clientX + 14, innerWidth - tip.offsetWidth - 8), y = Math.max(8, e.clientY - tip.offsetHeight - 10);
+    tip.style.left = x + 'px'; tip.style.top = y + 'px';
+  });
+
+  // ---- szójegyzék-kereső
+  $$('.gloss-search').forEach(inp => inp.addEventListener('input', () => {
+    const q = inp.value.toLowerCase().trim();
+    $$('.gloss-item', inp.parentElement).forEach(g => g.classList.toggle('hidden', q && !g.textContent.toLowerCase().includes(q)));
+  }));
+
+  // ---- ellenőrzőlista (helyben megjegyzi)
+  $$('.checklist').forEach(cl => {
+    const key = 'docs.check.' + (cl.dataset.key || location.pathname);
+    let state = {}; try { state = JSON.parse(store.get(key) || '{}'); } catch (e) {}
+    const bar = cl.previousElementSibling && cl.previousElementSibling.classList.contains('check-progress') ? $('i', cl.previousElementSibling) : null;
+    const upd = () => { const boxes = $$('input', cl); const done = boxes.filter(b => b.checked).length; if (bar) bar.style.width = (done / boxes.length * 100) + '%'; };
+    $$('input', cl).forEach((b, i) => {
+      b.checked = !!state[i]; b.closest('li').classList.toggle('done', b.checked);
+      b.onchange = () => { state[i] = b.checked; b.closest('li').classList.toggle('done', b.checked); store.set(key, JSON.stringify(state)); upd(); };
+    });
+    upd();
+  });
+
+  // ---- three.js fejléc: lebegő "útmutató-lapok", amelyeket a keresés vonalai kötnek össze
+  const cv = $('#hero3d');
+  if (cv && window.THREE && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const r = new THREE.WebGLRenderer({canvas: cv, antialias: true, alpha: true});
+    r.setPixelRatio(Math.min(2, devicePixelRatio));
+    const scene = new THREE.Scene(), cam = new THREE.PerspectiveCamera(45, 1, .1, 100); cam.position.set(0, 0, 14);
+    const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+    const group = new THREE.Group(); scene.add(group);
+    const mats = [], pages = [];
+    const geo = new THREE.PlaneGeometry(1.1, 1.5);
+    for (let i = 0; i < 26; i++) {
+      const m = new THREE.MeshBasicMaterial({color: i % 5 === 0 ? css('--accent-2') : css('--accent'), transparent: true, opacity: .16 + Math.random() * .22, side: THREE.DoubleSide});
+      mats.push(m);
+      const p = new THREE.Mesh(geo, m);
+      const a = Math.random() * Math.PI * 2, rad = 3 + Math.random() * 6;
+      p.position.set(Math.cos(a) * rad + 3, (Math.random() - .5) * 7, Math.sin(a) * rad - 4);
+      p.rotation.set(Math.random(), Math.random(), Math.random());
+      p.userData = {s: .2 + Math.random() * .5, o: Math.random() * 6};
+      group.add(p); pages.push(p);
+    }
+    const lineMat = new THREE.LineBasicMaterial({color: css('--accent'), transparent: true, opacity: .22});
+    const pts = [];
+    pages.forEach((p, i) => { const q = pages[(i * 7 + 3) % pages.length]; pts.push(p.position.clone(), q.position.clone()); });
+    const lines = new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints(pts), lineMat); group.add(lines);
+    const resize = () => { const w = cv.clientWidth, h = cv.clientHeight; r.setSize(w, h, false); cam.aspect = w / Math.max(1, h); cam.updateProjectionMatrix(); };
+    resize(); addEventListener('resize', resize);
+    addEventListener('themechange', () => { mats.forEach((m, i) => m.color.set(i % 5 === 0 ? css('--accent-2') : css('--accent'))); lineMat.color.set(css('--accent')); });
+    let mx = 0, my = 0, visible = true;
+    addEventListener('mousemove', e => { mx = e.clientX / innerWidth - .5; my = e.clientY / innerHeight - .5; });
+    new IntersectionObserver(es => visible = es[0].isIntersecting).observe(cv);
+    const clock = new THREE.Clock();
+    (function loop() {
+      requestAnimationFrame(loop); if (!visible) return;
+      const t = clock.getElapsedTime();
+      group.rotation.y = t * .05 + mx * .4; group.rotation.x = my * .2;
+      pages.forEach(p => { p.rotation.y += .002 * p.userData.s * 4; p.position.y += Math.sin(t * p.userData.s + p.userData.o) * .002; });
+      r.render(scene, cam);
+    })();
+  }
+})();
+</script>
+</body>
+</html>

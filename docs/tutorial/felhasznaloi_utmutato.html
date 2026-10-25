@@ -1,0 +1,637 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Felhasználói útmutató</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<style>
+:root{
+  color-scheme: light;
+  --bg:#f6f7fb; --panel:#ffffff; --panel-2:#f1f4f9; --border:#e3e7ef; --text:#141a26; --text-2:#46506a; --muted:#7a8399;
+  --accent:#2a78d6; --accent-2:#6250d6; --accent-soft:rgba(42,120,214,.10); --accent-ink:#1c5cab;
+  --ok:#0f8a3c; --ok-soft:rgba(15,138,60,.10); --warn:#b45309; --warn-soft:rgba(234,161,0,.14); --bad:#c0362c; --bad-soft:rgba(208,59,59,.10);
+  --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a; --s4:#eda100; --s5:#e87ba4;
+  --code-bg:#0f1420; --shadow:0 1px 2px rgba(16,24,40,.05),0 6px 24px rgba(16,24,40,.06);
+  --radius:14px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme: dark;
+    --bg:#0d1017; --panel:#151a24; --panel-2:#1c2230; --border:#2a3142; --text:#e8ebf2; --text-2:#b9c0d0; --muted:#8a93a8;
+    --accent:#5b9cf0; --accent-2:#9085e9; --accent-soft:rgba(91,156,240,.14); --accent-ink:#9cc3f7;
+    --ok:#3ccf6e; --ok-soft:rgba(60,207,110,.12); --warn:#f0b43a; --warn-soft:rgba(240,180,58,.12); --bad:#ef6b62; --bad-soft:rgba(239,107,98,.12);
+    --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181;
+    --code-bg:#0a0d14; --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 28px rgba(0,0,0,.35);
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --bg:#0d1017; --panel:#151a24; --panel-2:#1c2230; --border:#2a3142; --text:#e8ebf2; --text-2:#b9c0d0; --muted:#8a93a8;
+  --accent:#5b9cf0; --accent-2:#9085e9; --accent-soft:rgba(91,156,240,.14); --accent-ink:#9cc3f7;
+  --ok:#3ccf6e; --ok-soft:rgba(60,207,110,.12); --warn:#f0b43a; --warn-soft:rgba(240,180,58,.12); --bad:#ef6b62; --bad-soft:rgba(239,107,98,.12);
+  --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181;
+  --code-bg:#0a0d14; --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 28px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:84px}
+body{margin:0;background:var(--bg);color:var(--text);font:15.5px/1.65 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+a{color:var(--accent)}
+code{font-family:ui-monospace,"Cascadia Code",Consolas,monospace;font-size:.88em;background:var(--panel-2);border:1px solid var(--border);border-radius:6px;padding:1px 6px}
+#progress{position:fixed;top:0;left:0;height:3px;width:0;background:linear-gradient(90deg,var(--accent),var(--accent-2));z-index:60;transition:width .1s}
+
+/* ---------------- váz */
+.layout{display:flex;min-height:100vh}
+aside.side{position:sticky;top:0;height:100vh;width:290px;flex-shrink:0;background:var(--panel);border-right:1px solid var(--border);display:flex;flex-direction:column;z-index:40}
+.side-head{padding:18px 18px 12px;border-bottom:1px solid var(--border)}
+.side-brand{display:flex;gap:10px;align-items:center;font-weight:750;font-size:15px;line-height:1.25}
+.side-logo{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;color:#fff;background:linear-gradient(135deg,var(--accent),var(--accent-2));flex-shrink:0;font-size:17px}
+.side-sub{font-size:12px;color:var(--muted);margin-top:2px;font-weight:500}
+.side-tools{display:flex;gap:6px;margin-top:12px}
+.side-search{flex:1;min-width:0;border:1px solid var(--border);background:var(--panel-2);color:var(--text);border-radius:9px;padding:7px 10px;font:inherit;font-size:13px}
+.icon-btn{border:1px solid var(--border);background:var(--panel-2);color:var(--text-2);border-radius:9px;width:36px;cursor:pointer;font-size:15px}
+.icon-btn:hover{color:var(--accent);border-color:var(--accent)}
+nav.toc{flex:1;overflow:auto;padding:10px 10px 30px}
+nav.toc .grp{font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin:16px 10px 6px;font-weight:650}
+nav.toc a{display:flex;gap:9px;align-items:baseline;padding:7px 10px;border-radius:9px;color:var(--text-2);text-decoration:none;font-size:14px;line-height:1.35}
+nav.toc a .n{font-variant-numeric:tabular-nums;color:var(--muted);font-size:12px;min-width:18px}
+nav.toc a .t{font-size:11px;color:var(--muted);margin-left:auto;font-variant-numeric:tabular-nums;white-space:nowrap}
+nav.toc a:hover{background:var(--panel-2);color:var(--text)}
+nav.toc a.active{background:var(--accent-soft);color:var(--accent-ink);font-weight:650}
+nav.toc a.active .n{color:var(--accent)}
+nav.toc a.hidden{display:none}
+.side-foot{padding:12px 18px;border-top:1px solid var(--border);font-size:12px;color:var(--muted)}
+main{flex:1;min-width:0;padding:0 0 120px}
+.wrap{max-width:980px;margin:0 auto;padding:0 32px}
+.menu-btn{display:none}
+@media (max-width:960px){
+  aside.side{position:fixed;left:0;top:0;transform:translateX(-100%);transition:transform .25s;box-shadow:var(--shadow)}
+  body.nav-open aside.side{transform:none}
+  .menu-btn{display:grid;place-items:center;position:fixed;top:12px;left:12px;z-index:50;width:42px;height:42px;border-radius:12px;background:var(--panel);border:1px solid var(--border);box-shadow:var(--shadow);font-size:18px;cursor:pointer;color:var(--text)}
+  .wrap{padding:0 16px}
+}
+
+/* ---------------- fejléc (hős) */
+.hero{position:relative;overflow:hidden;border-bottom:1px solid var(--border);background:radial-gradient(1200px 400px at 80% -10%,var(--accent-soft),transparent),radial-gradient(800px 300px at 0% 120%,rgba(98,80,214,.12),transparent),var(--panel)}
+.hero canvas{position:absolute;inset:0;width:100%;height:100%;opacity:.9}
+.hero .wrap{position:relative;padding-top:64px;padding-bottom:46px}
+.eyebrow{display:inline-flex;gap:8px;align-items:center;font-size:12px;font-weight:650;letter-spacing:.06em;text-transform:uppercase;color:var(--accent-ink);background:var(--accent-soft);border-radius:999px;padding:4px 12px}
+.hero h1{font-size:clamp(28px,4vw,44px);line-height:1.12;margin:14px 0 10px;letter-spacing:-.02em}
+.hero p.lead{font-size:17px;color:var(--text-2);max-width:680px;margin:0}
+.hero-badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.badge{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;background:var(--panel);border:1px solid var(--border);border-radius:999px;padding:4px 11px;color:var(--text-2)}
+
+/* ---------------- szakaszok */
+section[data-nav]{padding-top:44px}
+section h2{font-size:25px;letter-spacing:-.01em;margin:0 0 6px;display:flex;align-items:center;gap:12px}
+section h2 .num{display:grid;place-items:center;width:34px;height:34px;border-radius:10px;background:var(--accent-soft);color:var(--accent-ink);font-size:15px;font-weight:750;flex-shrink:0}
+section h3{font-size:17px;margin:26px 0 8px}
+.sub{color:var(--muted);margin:0 0 16px}
+p{margin:10px 0}
+ul,ol{padding-left:22px}
+li{margin:4px 0}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px;margin:14px 0;box-shadow:var(--shadow)}
+.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.callout{border-radius:12px;padding:12px 16px;margin:14px 0;border:1px solid var(--border);background:var(--panel-2);font-size:14.5px}
+.callout.info{background:var(--accent-soft);border-color:transparent}
+.callout.ok{background:var(--ok-soft);border-color:transparent}
+.callout.warn{background:var(--warn-soft);border-color:transparent}
+.callout.bad{background:var(--bad-soft);border-color:transparent}
+.callout b:first-child{display:block;margin-bottom:2px}
+.kbd{display:inline-block;border:1px solid var(--border);border-bottom-width:2px;border-radius:6px;padding:0 6px;font-size:12.5px;background:var(--panel);font-family:ui-monospace,Consolas,monospace}
+.pill{display:inline-block;font-size:12px;font-weight:650;border-radius:999px;padding:1px 9px;background:var(--panel-2);border:1px solid var(--border);color:var(--text-2)}
+.pill.blue{background:var(--accent-soft);color:var(--accent-ink);border-color:transparent}
+.pill.green{background:var(--ok-soft);color:var(--ok);border-color:transparent}
+.pill.orange{background:var(--warn-soft);color:var(--warn);border-color:transparent}
+.pill.red{background:var(--bad-soft);color:var(--bad);border-color:transparent}
+table.t{width:100%;border-collapse:collapse;font-size:14px;margin:12px 0}
+table.t th{text-align:left;font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);font-weight:650;padding:8px 10px;border-bottom:1px solid var(--border)}
+table.t td{padding:9px 10px;border-bottom:1px solid var(--border);vertical-align:top}
+table.t tr:hover td{background:var(--panel-2)}
+table.t td code{white-space:nowrap}
+.tbl{overflow-x:auto}
+
+/* ---------------- kód */
+figure.code{margin:14px 0;border-radius:12px;overflow:hidden;border:1px solid var(--border);background:var(--code-bg);box-shadow:var(--shadow)}
+.code-head{display:flex;align-items:center;gap:8px;padding:8px 12px;background:#161c2a;color:#c9d1e3;font-size:12.5px;border-bottom:1px solid #222a3b}
+.code-head .dots{display:flex;gap:5px;margin-right:4px}
+.code-head .dots i{width:9px;height:9px;border-radius:50%;background:#3a4256;display:block}
+.code-head .file{font-family:ui-monospace,Consolas,monospace;color:#e6ebf7;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.code-head .lines{background:#26304a;color:#9fc2ff;border-radius:6px;padding:0 7px;font-size:11.5px;white-space:nowrap}
+.code-head .ttl{color:#8b95ad;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.code-head button{margin-left:auto;background:#26304a;border:0;color:#cfd8ee;border-radius:7px;padding:3px 10px;font-size:12px;cursor:pointer}
+.code-head button:hover{background:#34416a}
+figure.code pre{margin:0;max-height:440px;overflow:auto}
+figure.code code{display:block;background:transparent!important;border:0;padding:14px 16px!important;font-size:12.8px;line-height:1.55;white-space:pre}
+.cmd{display:flex;align-items:center;gap:10px;background:var(--code-bg);color:#e6ebf7;border-radius:10px;padding:10px 12px;margin:8px 0;font-family:ui-monospace,Consolas,monospace;font-size:13px;overflow-x:auto}
+.cmd::before{content:"$";color:#6d7da0}
+.cmd span{flex:1;white-space:pre}
+.cmd button{background:#26304a;border:0;color:#cfd8ee;border-radius:7px;padding:3px 10px;font-size:12px;cursor:pointer;font-family:inherit}
+.where{display:inline-flex;align-items:center;gap:6px;font-size:13px;background:var(--panel-2);border:1px solid var(--border);border-radius:8px;padding:2px 9px;font-family:ui-monospace,Consolas,monospace;color:var(--text-2)}
+.where::before{content:"📄"}
+
+/* ---------------- fülek */
+.tabs{margin:14px 0}
+.tab-btns{display:flex;gap:4px;flex-wrap:wrap;background:var(--panel-2);border:1px solid var(--border);border-radius:12px;padding:4px;width:fit-content;max-width:100%}
+.tab-btns button{border:0;background:none;color:var(--text-2);border-radius:9px;padding:7px 14px;font:inherit;font-size:14px;cursor:pointer}
+.tab-btns button.on{background:var(--panel);color:var(--text);box-shadow:var(--shadow);font-weight:650}
+.tab-panel{display:none;margin-top:12px;overflow-x:auto;min-width:0}
+.tab-panel.on{display:block;animation:fade .25s}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+
+/* ---------------- lépésdiagram (pipeline) */
+.pipeline{margin:16px 0}
+.psteps{display:flex;flex-wrap:wrap;gap:8px;align-items:stretch}
+.pstep{flex:1 1 130px;min-width:120px;border:1px solid var(--border);background:var(--panel);border-radius:12px;padding:10px 12px;text-align:left;cursor:pointer;font:inherit;color:var(--text);position:relative;transition:transform .15s,border-color .15s,box-shadow .15s}
+.pstep:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+.pstep b{display:block;font-size:14px}
+.pstep small{display:block;color:var(--muted);font-size:12px;line-height:1.35;margin-top:2px}
+.pstep .ic{font-size:20px}
+.pstep.on{border-color:var(--accent);background:var(--accent-soft)}
+.pstep:not(:last-child)::after{content:"→";position:absolute;right:-12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:14px;z-index:2}
+.pdetail{margin-top:10px;border-radius:12px;background:var(--panel-2);border:1px solid var(--border);padding:14px 16px;min-height:60px;animation:fade .25s}
+
+/* ---------------- kattintható képernyő-makett */
+.hotspot{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(240px,1fr);gap:16px;margin:16px 0;align-items:start}
+@media (max-width:820px){.hotspot{grid-template-columns:minmax(0,1fr)}}
+.mock-scroll{min-width:0}
+.mock-scroll .mock{width:680px}
+.mock .m-top b{white-space:nowrap}
+.mock{position:relative;border-radius:14px;border:1px solid var(--border);background:var(--panel);box-shadow:var(--shadow);overflow:hidden;font-size:12.5px;line-height:1.4;color:var(--text)}
+.mock .bar{display:flex;align-items:center;gap:8px;padding:8px 12px;border-bottom:1px solid var(--border);background:var(--panel-2)}
+.mock .bar .dots{display:flex;gap:5px}.mock .bar .dots i{width:9px;height:9px;border-radius:50%;background:var(--border);display:block}
+.mock .url{flex:1;background:var(--panel);border:1px solid var(--border);border-radius:7px;padding:2px 10px;color:var(--muted);font-size:11.5px}
+.hot{position:absolute;width:26px;height:26px;border-radius:50%;border:2px solid #fff;background:var(--accent);color:#fff;font-weight:750;font-size:12px;cursor:pointer;display:grid;place-items:center;box-shadow:0 0 0 4px var(--accent-soft),0 4px 12px rgba(0,0,0,.25);z-index:3;transition:transform .15s}
+.hot:hover{transform:scale(1.12)}
+.hot.on{background:var(--accent-2);animation:ping 1.6s infinite}
+@keyframes ping{0%{box-shadow:0 0 0 0 rgba(98,80,214,.55)}70%{box-shadow:0 0 0 12px rgba(98,80,214,0)}100%{box-shadow:0 0 0 0 rgba(98,80,214,0)}}
+.hot-info{position:sticky;top:20px;border-radius:14px;border:1px solid var(--border);background:var(--panel);padding:16px 18px;box-shadow:var(--shadow)}
+.hot-info .hn{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:50%;background:var(--accent-2);color:#fff;font-weight:750;font-size:12px;margin-right:8px}
+.hot-info h4{margin:0 0 6px;font-size:16px;display:flex;align-items:center}
+.hot-info .hl{font-size:14px;color:var(--text-2)}
+.hot-nav{display:flex;gap:6px;margin-top:12px}
+.hot-nav button{border:1px solid var(--border);background:var(--panel-2);color:var(--text);border-radius:8px;padding:4px 10px;cursor:pointer;font:inherit;font-size:13px}
+.zone{outline:2px dashed transparent;outline-offset:2px;border-radius:6px;transition:outline-color .2s,background .2s}
+.zone.lit{outline-color:var(--accent-2);background:rgba(98,80,214,.06)}
+
+/* makett-elemek (chat + admin) */
+.m-top{display:flex;align-items:center;gap:8px;padding:8px 12px;border-bottom:1px solid var(--border)}
+.m-top b{font-size:13px}
+.m-btn{border:1px solid var(--border);border-radius:7px;padding:2px 8px;font-size:11.5px;background:var(--panel);white-space:nowrap}
+.m-btn.p{background:var(--s1);border-color:var(--s1);color:#fff}
+.m-body{display:grid;grid-template-columns:5fr 7fr;gap:10px;padding:10px;background:var(--bg)}
+.m-panel{background:var(--panel);border:1px solid var(--border);border-radius:9px;padding:8px}
+.m-h{font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:650;margin-bottom:6px}
+.m-src{border:1px solid var(--border);border-radius:7px;padding:6px 7px;margin-bottom:6px}
+.m-src.c{border-color:var(--s1)}
+.m-num{display:inline-grid;place-items:center;min-width:16px;height:16px;border-radius:8px;background:var(--panel-2);font-size:10px;font-weight:700;margin-right:4px}
+.m-src.c .m-num{background:var(--s1);color:#fff}
+.m-line{height:6px;border-radius:3px;background:var(--panel-2);margin:4px 0}
+.m-msg{border-radius:10px;padding:7px 9px;margin:6px 0;max-width:92%}
+.m-msg.u{margin-left:auto;background:var(--s1);color:#fff;width:fit-content}
+.m-msg.b{background:var(--panel-2)}
+.m-cite{display:inline-grid;place-items:center;min-width:14px;height:14px;border-radius:7px;background:var(--s1);color:#fff;font-size:9px;font-weight:700;vertical-align:1px}
+.m-thumbs{display:flex;gap:5px;margin-top:6px}.m-thumbs i{width:46px;height:34px;border-radius:5px;border:1px solid var(--border);background:linear-gradient(135deg,var(--panel),var(--panel-2));display:block}
+.m-foot{display:flex;gap:8px;align-items:center;font-size:10.5px;color:var(--muted);margin-top:4px}
+.m-input{display:flex;gap:6px;align-items:center;margin-top:8px}
+.m-input .f{flex:1;border:1px solid var(--border);border-radius:8px;padding:6px 8px;color:var(--muted);background:var(--panel)}
+.m-tabs{display:flex;gap:4px}.m-tabs span{padding:3px 8px;border-radius:7px;font-size:11.5px;color:var(--muted)}.m-tabs span.on{background:var(--accent-soft);color:var(--accent-ink);font-weight:650}
+.m-kpis{display:flex;gap:6px;flex-wrap:wrap}.m-kpi{border:1px solid var(--border);border-radius:8px;padding:4px 8px;background:var(--panel)}.m-kpi b{display:block;font-size:14px}.m-kpi span{font-size:9.5px;color:var(--muted)}
+
+/* ---------------- mini diagramok (SVG) */
+.chart-demo{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:14px 16px;box-shadow:var(--shadow);margin:12px 0}
+.chart-demo h4{margin:0 0 2px;font-size:15px}
+.chart-demo .cap{font-size:13px;color:var(--muted);margin-bottom:6px}
+.chart-demo svg{width:100%;height:auto;display:block;overflow:visible}
+.chart-demo .grid line{stroke:var(--border)}
+.chart-demo text{fill:var(--muted);font-size:11px;font-family:inherit}
+.chart-demo .anno{fill:var(--text-2);font-size:11.5px;font-weight:600}
+.chart-demo .anno-line{stroke:var(--text-2);stroke-width:1;stroke-dasharray:3 3;fill:none}
+.chart-demo [data-tip]{cursor:pointer;transition:opacity .15s}
+.chart-demo [data-tip]:hover{opacity:.8}
+.legend{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:12.5px;color:var(--text-2);margin:4px 0 6px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+#tip{position:fixed;pointer-events:none;background:#141a26;color:#fff;font-size:12.5px;border-radius:9px;padding:7px 10px;max-width:280px;z-index:80;box-shadow:0 8px 24px rgba(0,0,0,.25);opacity:0;transition:opacity .12s}
+#tip.on{opacity:1}
+
+/* ---------------- szójegyzék, lista */
+.gloss-search{width:100%;border:1px solid var(--border);background:var(--panel);color:var(--text);border-radius:11px;padding:10px 14px;font:inherit;margin:8px 0 12px}
+.gloss{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
+.gloss-item{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:12px 14px}
+.gloss-item b{display:block;font-size:15px}
+.gloss-item .full{font-size:12px;color:var(--accent-ink);margin-bottom:4px}
+.gloss-item p{margin:4px 0 0;font-size:13.5px;color:var(--text-2)}
+.gloss-item.hidden{display:none}
+.checklist{list-style:none;padding:0}
+.checklist li{display:flex;gap:10px;align-items:flex-start;padding:9px 12px;border:1px solid var(--border);border-radius:11px;background:var(--panel);margin:7px 0}
+.checklist input{margin-top:4px;width:17px;height:17px;accent-color:var(--accent)}
+.checklist li.done{opacity:.65}.checklist li.done span{text-decoration:line-through}
+.check-progress{height:8px;border-radius:5px;background:var(--panel-2);overflow:hidden;margin:6px 0}.check-progress i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent-2));width:0;transition:width .3s}
+details.acc{border:1px solid var(--border);border-radius:12px;background:var(--panel);margin:8px 0;overflow:hidden}
+details.acc summary{cursor:pointer;padding:12px 16px;font-weight:650;list-style:none;display:flex;align-items:center;gap:10px}
+details.acc summary::-webkit-details-marker{display:none}
+details.acc summary::before{content:"▸";color:var(--accent);transition:transform .2s}
+details.acc[open] summary::before{transform:rotate(90deg)}
+details.acc .acc-body{padding:0 16px 14px}
+.tree{font-family:ui-monospace,Consolas,monospace;font-size:13px;background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:12px 16px;line-height:1.75;white-space:pre;overflow-x:auto}
+.tree .d{color:var(--accent-ink);font-weight:650}.tree .c{color:var(--muted);font-family:system-ui,sans-serif;font-size:12.5px}
+
+/* ---------------- láb */
+footer.foot{margin-top:60px;border-top:1px solid var(--border);padding:20px 0;color:var(--muted);font-size:13px}
+@media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}html{scroll-behavior:auto}}
+@media print{aside.side,.menu-btn,#progress{display:none!important}.hero canvas{display:none}}
+</style>
+</head>
+<body>
+<div id="progress"></div>
+<button class="menu-btn" aria-label="Menü" onclick="document.body.classList.toggle('nav-open')">☰</button>
+<div class="layout">
+  <aside class="side">
+    <div class="side-head">
+      <div class="side-brand"><div class="side-logo">📘</div><div>Felhasználói útmutató<div class="side-sub">Útmutató-asszisztens · a chat használata</div></div></div>
+      <div class="side-tools">
+        <input class="side-search" type="search" placeholder="Keresés a menüben…" aria-label="Keresés a menüben">
+        <button class="icon-btn" id="themeBtn" title="Világos / sötét téma" aria-label="Téma váltása">◐</button>
+      </div>
+    </div>
+    <nav class="toc" aria-label="Tartalom"></nav>
+    <div class="side-foot">Útmutató-asszisztens · 07. heti záróprojekt</div>
+  </aside>
+  <main>
+<header class="hero"><canvas id="hero3d" aria-hidden="true"></canvas><div class="wrap">
+  <span class="eyebrow">👤 Interaktív útmutató · felhasználóknak</span>
+  <h1>Kérdezz a használati útmutatókból</h1>
+  <p class="lead">Az Útmutató-asszisztens 20 magyar használati útmutatóból válaszol – kávégéptől a mosogatógépen át a tévéig. Minden
+  válasznál megmutatja, melyik útmutató melyik oldaláról dolgozott, így egy kattintással ellenőrizheted.</p>
+  <div class="hero-badges"><span class="badge">📍 <code>http://localhost:8070</code></span><span class="badge">💬 magyarul</span><span class="badge">📄 forrással, oldalszámmal</span><span class="badge">🎤 diktálható</span></div>
+</div></header>
+
+<div class="wrap">
+
+<section id="mi-ez" data-nav="Mi ez?" data-group="Kezdés">
+  <h2>Mi ez?</h2>
+  <p class="sub">Egy asszisztens, ami <b>csak</b> a feltöltött útmutatókból válaszol – nem „tippel”, nem az internetről dolgozik.</p>
+  <div class="grid-2">
+    <div class="card"><b>✅ Ebben segít</b><ul><li>használat, beállítás, programok</li><li>tisztítás, vízkőtelenítés, karbantartás</li><li>hibaüzenetek, hibaelhárítás</li><li>alkatrészek, műszaki adatok</li></ul></div>
+    <div class="card"><b>🚫 Ebben nem</b><ul><li>olyan eszköz, aminek nincs útmutatója</li><li>általános kérdések (pl. időjárás, receptek)</li><li>vers, levél, programkód írása</li></ul>
+      <p class="tipbox">Ilyenkor udvariasan jelzi, hogy nem tud segíteni – ez szándékos.</p></div>
+  </div>
+</section>
+
+<section id="felulet" data-nav="A felület" data-group="Kezdés">
+  <h2>A felület</h2>
+  <p class="sub">Kattints a számokra, vagy lapozz a nyilakkal.</p>
+  <div class="hotspot">
+    <div class="mock">
+      <div class="bar"><span class="dots"><i></i><i></i><i></i></span><span class="url">localhost:8070</span></div>
+      <div class="m-top"><span class="m-btn zone" data-zone="conv">☰ Beszélgetések</span><b>📘 Útmutató-asszisztens</b><span style="margin-left:auto" class="m-btn zone" data-zone="new">＋ Új beszélgetés</span><span class="m-btn">Admin</span></div>
+      <div class="m-body">
+        <div class="m-panel zone" data-zone="src">
+          <div class="m-h">Források · 6 részlet · 2 hivatkozott</div>
+          <div style="display:flex;gap:6px;align-items:center;margin-bottom:6px"><span class="pill red" style="font-size:9px">PDF</span><b style="font-size:11.5px">JURA Impressa S9 kávégép</b><span class="m-btn zone" data-zone="pdf" style="margin-left:auto">Megnyitás ↗</span></div>
+          <div class="m-src c"><span class="m-num">1</span><b>16. oldal</b> · 0,92<div style="color:var(--muted);font-size:10.5px">16. Vízkőtelenítés</div><div class="m-line"></div><div class="m-line" style="width:80%"></div><span style="color:var(--accent);font-size:10.5px">Teljes szöveg ▾</span></div>
+          <div class="m-src"><span class="m-num">3</span><b>17. oldal</b> · 0,71<div class="m-line"></div><div class="m-line" style="width:60%"></div></div>
+        </div>
+        <div class="m-panel">
+          <div class="m-msg u">Hogyan kell vízkőteleníteni a JURA S9-et?</div>
+          <div class="m-msg b zone" data-zone="answer">1. Ürítse ki a víztartályt <span class="m-cite zone" data-zone="cite">1</span><br>2. Oldja fel a vízkőoldót 0,6 l vízben <span class="m-cite">1</span><br>3. Nyomja meg az öblítés gombot <span class="m-cite">2</span>
+            <div class="m-thumbs zone" data-zone="img"><i></i><i></i><i></i></div></div>
+          <div class="m-foot"><span class="zone" data-zone="usage">4,1 s · első token 3,4 s · $0.0016</span><span class="zone" data-zone="fb" style="margin-left:auto">Hasznos volt? 👍 👎</span></div>
+          <div class="m-input"><span class="f zone" data-zone="input">Kérdezz egy eszköz használatáról…</span><span class="m-btn zone" data-zone="mic">🎤</span><span class="m-btn p">Küldés ➤</span></div>
+        </div>
+      </div>
+      <button class="hot" data-zone="conv" data-title="Beszélgetések"><template>A korábbi beszélgetéseid. Megnyithatod, <b>átnevezheted</b> (✎) vagy <b>törölheted</b> (🗑) őket. A böngésző megjegyzi – frissítés után is megmaradnak.</template></button>
+      <button class="hot" data-zone="new" data-title="Új beszélgetés"><template>Tiszta lap. Használd, ha <b>másik eszközről</b> kérdezel – így az előző téma nem keveredik bele.</template></button>
+      <button class="hot" data-zone="src" data-title="Források"><template>Melyik útmutató melyik oldaláról jön a válasz. A <b>kék keretes</b> kártyákra hivatkozik a válasz; a kártya száma a válasz [n] jelvényével egyezik. A pontszám (0–1) azt mutatja, mennyire illik a részlet a kérdéshez.</template></button>
+      <button class="hot" data-zone="pdf" data-title="PDF megnyitása"><template>Új lapon megnyitja az eredeti útmutatót. A kártyákon lévő „16. o. ↗” gomb <b>pontosan azon az oldalon</b> nyitja meg.</template></button>
+      <button class="hot" data-zone="cite" data-title="[n] hivatkozás"><template>Minden lépés végén egy szám. Rákattintva bal oldalt felvillan a forrás, és megjelenik a teljes szövege.</template></button>
+      <button class="hot" data-zone="img" data-title="Képek"><template>Az útmutató ábrái a hivatkozott oldalakról. Kattintásra nagyítva nyílnak meg; nyilakkal lapozhatsz, <span class="kbd">Esc</span>-re bezárul.</template></button>
+      <button class="hot" data-zone="usage" data-title="Idő és költség"><template>Mennyi ideig tartott a válasz, és mennyibe került (USD). Tájékoztató adat – neked nem kell vele foglalkoznod.</template></button>
+      <button class="hot" data-zone="fb" data-title="Visszajelzés"><template>👍 ha jó volt; 👎 ha nem – utána megjelölheted, mi volt a gond, és leírhatod, mit vártál volna.</template></button>
+      <button class="hot" data-zone="input" data-title="Kérdés mező"><template><span class="kbd">Enter</span> = küldés, <span class="kbd">Shift</span>+<span class="kbd">Enter</span> = új sor. Max. 2000 karakter.</template></button>
+      <button class="hot" data-zone="mic" data-title="Diktálás 🎤"><template>Mondd be a kérdést magyarul (Chrome / Edge). Bekapcsolva a gomb piros és lüktet.</template></button>
+    </div>
+    <div class="hot-info"></div>
+  </div>
+</section>
+
+<section id="elso" data-nav="Az első kérdés" data-group="Kezdés">
+  <h2>Az első kérdés – 4 lépésben</h2>
+  <div class="pipeline"><div class="psteps">
+    <button class="pstep" type="button"><span class="ic">✍️</span><b>Írd be</b><small>vagy kattints egy példára</small><template>Írd be a kérdésed a lenti mezőbe – vagy az üres kezdőképernyőn kattints egy <b>példakérdésre</b>. Nevezd meg az eszközt is (pl. „JURA S9 kávégép”).</template></button>
+    <button class="pstep" type="button"><span class="ic">➤</span><b>Küldés</b><small>Enter vagy gomb</small><template><span class="kbd">Enter</span> vagy a <b>Küldés ➤</b> gomb. Közben a „Kérdés értelmezése… → Keresés az útmutatókban… → Válasz írása…” felirat jelzi, hol tart.</template></button>
+    <button class="pstep" type="button"><span class="ic">💬</span><b>Válasz</b><small>szóról szóra</small><template>A válasz <b>szóról szóra</b> érkezik (pár másodperc), lépésekre bontva. Ha közben meggondolod magad: <b>■ Leállítás</b>.</template></button>
+    <button class="pstep" type="button"><span class="ic">🔎</span><b>Ellenőrzés</b><small>forrás + PDF</small><template>Kattints egy <span class="m-cite">1</span> jelvényre: bal oldalt kiemelődik a forrás. A „16. o. ↗” gombbal megnyílik az eredeti PDF azon az oldalon.</template></button>
+  </div><div class="pdetail"></div></div>
+</section>
+
+<section id="tippek" data-nav="Jó kérdések" data-group="Használat">
+  <h2>Hogyan kérdezz jól?</h2>
+  <div class="tbl"><table class="t">
+    <tr><th>Tipp</th><th>❌ Kevésbé jó</th><th>✅ Jobb</th></tr>
+    <tr><td>Nevezd meg az eszközt</td><td>Hogyan kell vízkőteleníteni?</td><td>Hogyan kell vízkőteleníteni a <b>JURA Impressa S9</b> kávégépet?</td></tr>
+    <tr><td>Egy kérdés – egy téma</td><td>Hogyan tisztítom, mit jelent ez a jelzés, és milyen programok vannak?</td><td>Mit jelent, ha a Bosch mosogatógépen villog az <b>„Ellenőrizze a vizet”</b> kijelzés?</td></tr>
+    <tr><td>Írd le a tünetet</td><td>Nem működik a gép.</td><td>A Saeco Vienna gépből <b>túl gyorsan folyik le</b> a kávé. Mit tegyek?</td></tr>
+    <tr><td>Típusszám pontosan</td><td>a bosch gépem</td><td>a <b>SMV41D10EU</b> mosogatógép</td></tr>
+  </table></div>
+  <h3>Kipróbálható példák (másold ki)</h3>
+  <div class="cmd">Hogyan kell vízkőteleníteni a JURA Impressa S9 kávégépet?</div>
+  <div class="cmd">Hogyan tisztítsam a Bosch SMV41D10EU mosogatógép szűrőjét?</div>
+  <div class="cmd">Hogyan párosítsam a hordozható lemezjátszót Bluetooth hangszóróval?</div>
+  <div class="cmd">Mit tegyek, ha a 3D nyomtatón a nyomat nem tapad a platformra?</div>
+  <div class="cmd">Mit jelent, ha a GM-900 modem zöld LED-je gyorsan villog?</div>
+</section>
+
+<section id="forrasok" data-nav="Források és PDF" data-group="Használat">
+  <h2>Források és a PDF</h2>
+  <div class="grid-2">
+    <div class="card"><b>📚 Bal oldali panel</b><p>A válaszhoz felhasznált részletek <b>útmutatónként</b>. A hivatkozottak <b>kék keretesek</b>, előre kerülnek. Minden kártyán: oldalszám,
+      fejezet, relevancia (0–1), a szöveg eleje – „Teljes szöveg ▾” lenyitja.</p></div>
+    <div class="card"><b>📄 Eredeti PDF</b><p>„<b>Megnyitás ↗</b>” = a teljes útmutató új lapon. „<b>16. o. ↗</b>” = pont az adott oldalon. Így bármikor ellenőrizheted, hogy a válasz tényleg benne van.</p></div>
+  </div>
+  <div class="callout info"><b>Korábbi válasz forrásai</b>Kattints egy régebbi válaszra – a bal panel annak a forrásait mutatja (a kiválasztott válasz bal szélén kék csík jelzi).</div>
+  <div class="callout"><b>Telefonon</b>Keskeny képernyőn felül két fül van: <b>Chat</b> és <b>Források</b> – egy [n]-re kattintva automatikusan a Forrásokra vált.</div>
+</section>
+
+<section id="kepek" data-nav="Képek" data-group="Használat">
+  <h2>Képek nagyítása</h2>
+  <p>Ha a hivatkozott oldalakon ábra van, a válasz alatt megjelenik (max. 6). A képre kattintva nagyító ablak nyílik:</p>
+  <div class="grid-3">
+    <div class="card"><b>‹ ›</b><p>Lapozás a képek között (vagy <span class="kbd">←</span> <span class="kbd">→</span>).</p></div>
+    <div class="card"><b>PDF ezen az oldalon ↗</b><p>Az eredeti oldal megnyitása.</p></div>
+    <div class="card"><b>✕ / Esc</b><p>Bezárás (vagy kattintás a sötét háttérre).</p></div>
+  </div>
+  <p class="tipbox">A képek alatt rövid leírás is van – ezt egy képfelismerő MI írta, ezért ellenőrizd az eredeti oldalon.</p>
+</section>
+
+<section id="diktalas" data-nav="Diktálás 🎤" data-group="Használat">
+  <h2>Diktálás 🎤</h2>
+  <div class="pipeline"><div class="psteps">
+    <button class="pstep" type="button"><span class="ic">🎤</span><b>Kattints</b><small>a mikrofon gombra</small><template>A <b>🎤</b> gomb a Küldés mellett van. Az első alkalommal a Chrome engedélyt kér a mikrofonhoz – kattints az <b>Engedélyezés</b>re.</template></button>
+    <button class="pstep" type="button"><span class="ic">🗣️</span><b>Beszélj</b><small>magyarul</small><template>A gomb piros és lüktet. Beszélj nyugodtan, természetes tempóban – a szöveg <b>élőben</b> jelenik meg (közben még javulhat). Szünet után is figyel.</template></button>
+    <button class="pstep" type="button"><span class="ic">✏️</span><b>Javíts</b><small>ha kell</small><template>Kattints újra a gombra a leállításhoz. A szöveget a mezőben kézzel is javíthatod. Ha volt már szöveg a mezőben, a diktálás <b>utána</b> folytatódik.</template></button>
+    <button class="pstep" type="button"><span class="ic">➤</span><b>Küldés</b><small>leállítja</small><template>Küldéskor a diktálás magától leáll.</template></button>
+  </div><div class="pdetail"></div></div>
+  <details class="acc"><summary>Nem jelenik meg a 🎤 gomb</summary><div class="acc-body"><p>A böngésződ nem támogatja (pl. Firefox). Használj <b>Chrome</b>-ot vagy <b>Edge</b>-et.</p></div></details>
+  <details class="acc"><summary>„A mikrofon nincs engedélyezve”</summary><div class="acc-body"><p>A címsor bal oldalán a 🔒 / mikrofon ikonra kattintva engedélyezd a mikrofont, majd próbáld újra.</p></div></details>
+  <details class="acc"><summary>„A diktáláshoz biztonságos kapcsolat kell”</summary><div class="acc-body"><p>A mikrofon csak <code>https://</code> vagy <code>localhost</code> címen működik. Kérd a rendszergazdától a megfelelő címet.</p></div></details>
+  <details class="acc"><summary>„Hálózati hiba” / nem ismer fel semmit</summary><div class="acc-body"><p>A Chrome a hangot a Google szerverén ismeri fel – kell internetkapcsolat. Csendesebb helyen, közelebb a mikrofonhoz próbáld.</p></div></details>
+</section>
+
+<section id="folytatas" data-nav="Folytatás, beszélgetések" data-group="Használat">
+  <h2>Folytatás és beszélgetések</h2>
+  <div class="grid-2">
+    <div class="card"><b>💬 Kérdezz tovább</b><p>Az asszisztens emlékszik az előzményekre: „<i>És a távirányítóba milyen elem kell?</i>” – tudja, hogy az RC Cheetah autóról van szó.</p></div>
+    <div class="card"><b>☰ Beszélgetések</b><p>Bal felül. Minden beszélgetés mentődik (az első kérdés lesz a címe). ✎ átnevezés · 🗑 törlés · ＋ új beszélgetés.</p></div>
+  </div>
+  <div class="callout warn"><b>Új eszköz = új beszélgetés</b>Ha másik eszközről kérdezel, kezdj új beszélgetést – így pontosabb lesz a keresés.</div>
+</section>
+
+<section id="visszajelzes" data-nav="Visszajelzés" data-group="Használat">
+  <h2>Visszajelzés 👍 / 👎</h2>
+  <p class="sub">A visszajelzésedet az adminok látják, és ebből javítják a rendszert.</p>
+  <div class="grid-2">
+    <div class="card"><b>👍 Jó volt</b><p>Egy kattintás – kész.</p><b>👎 Nem volt jó</b><p>Megnyílik egy kis űrlap: jelölj meg legalább egy okot, <b>vagy</b> írd le, mit vártál volna – utána <b>Küldés</b>.</p></div>
+    <div class="mock" style="padding:12px">
+      <div style="font-weight:650;margin-bottom:6px">Mi volt a gond a válasszal?</div>
+      <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px"><span class="pill">Téves</span><span class="pill">Nem találta</span><span class="pill blue">Hiányos</span><span class="pill">Rossz forrás</span><span class="pill">Rossz kép</span><span class="pill">Nehezen érthető</span></div>
+      <div style="border:1px solid var(--border);border-radius:7px;padding:6px 8px;color:var(--muted);min-height:40px">Mit vártál volna? pl. hiányzott a tabletta behelyezése…</div>
+      <div style="display:flex;justify-content:flex-end;gap:6px;margin-top:8px"><span class="m-btn">Mégse</span><span class="m-btn p">Küldés</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="nincs-valasz" data-nav="Ha nincs jó válasz" data-group="Segítség">
+  <h2>Ha nem kapsz jó választ</h2>
+  <details class="acc" open><summary>„Erről nem találtam információt az útmutatókban.”</summary><div class="acc-body"><p>A keresett téma nincs benne egyik útmutatóban sem – az asszisztens ilyenkor szándékosan <b>nem talál ki</b> választ. Néha megnevezi a
+    legközelebbi útmutatókat. Próbáld más szavakkal, vagy nevezd meg pontosan az eszközt.</p></div></details>
+  <details class="acc"><summary>Visszakérdez: „melyik eszközről van szó?”</summary><div class="acc-body"><p>A kérdés több eszközre is illik (pl. 4 kávégép van). Írd meg a típust – vagy kezd így: „A Saeco Royal Digital…”.</p></div></details>
+  <details class="acc"><summary>„Ebben nem tudok segíteni…”</summary><div class="acc-body"><p>Témán kívüli kérés (vers, általános tudás). Csak az útmutatókkal kapcsolatban segít.</p></div></details>
+  <details class="acc"><summary>„Hiba történt a válasz készítése közben.”</summary><div class="acc-body"><p>Átmeneti szerverhiba. Várj pár másodpercet, és küldd el újra. Ha ismétlődik, szólj az adminnak.</p></div></details>
+  <details class="acc"><summary>A válasz hiányos vagy pontatlan</summary><div class="acc-body"><p>Nézd meg a forrást (PDF az oldalon), és adj 👎 visszajelzést az okkal – ez segít a javításban.</p></div></details>
+</section>
+
+<section id="gyik" data-nav="Gyakori kérdések" data-group="Segítség">
+  <h2>Gyakori kérdések</h2>
+  <details class="acc"><summary>Kell regisztrálni?</summary><div class="acc-body"><p>Nem. A böngésződ egy azonosítóval jegyzi meg a beszélgetéseidet – másik böngészőből vagy gépről nem látszanak.</p></div></details>
+  <details class="acc"><summary>Mennyire megbízható a válasz?</summary><div class="acc-body"><p>Csak az útmutatókból dolgozik, és mindig megmutatja a forrást. A mérések szerint a jó oldalt a tesztkérdések mindegyikénél megtalálja – de fontos lépés (pl. elektromos javítás) előtt mindig nézd meg az eredeti oldalt.</p></div></details>
+  <details class="acc"><summary>Miért tart pár másodpercig?</summary><div class="acc-body"><p>A kérdést értelmezi, több ezer útmutató-részlet között keres, sorba rendezi a találatokat, és csak utána ír. Az első szó általában 3–4 mp múlva jelenik meg.</p></div></details>
+  <details class="acc"><summary>Kérdezhetek angolul?</summary><div class="acc-body"><p>Igen – azon a nyelven válaszol, amin kérdezel, de az útmutatók magyarok, így magyarul a legpontosabb.</p></div></details>
+  <details class="acc"><summary>Hiányzik egy útmutató – mit tegyek?</summary><div class="acc-body"><p>Szólj az adminnak: PDF-ben pár perc alatt feltölthető, utána már kérdezhetsz belőle.</p></div></details>
+</section>
+
+<section id="probald" data-nav="Próbáld ki!" data-group="Segítség">
+  <h2>Próbáld ki! ✔</h2>
+  <p class="sub">Pipáld ki, amit már kipróbáltál – a böngésző megjegyzi.</p>
+  <div class="check-progress"><i></i></div>
+  <ul class="checklist" data-key="user-try">
+    <li><input type="checkbox"><span>Feltettem egy kérdést egy példakérdésre kattintva.</span></li>
+    <li><input type="checkbox"><span>Rákattintottam egy <span class="m-cite">1</span> jelvényre, és megnéztem a forrást.</span></li>
+    <li><input type="checkbox"><span>Megnyitottam a PDF-et a megfelelő oldalon.</span></li>
+    <li><input type="checkbox"><span>Felnagyítottam egy képet, és nyilakkal lapoztam.</span></li>
+    <li><input type="checkbox"><span>Feltettem egy folytató kérdést („és…?”).</span></li>
+    <li><input type="checkbox"><span>Diktáltam egy kérdést a 🎤 gombbal.</span></li>
+    <li><input type="checkbox"><span>Adtam egy 👍 vagy 👎 visszajelzést.</span></li>
+    <li><input type="checkbox"><span>Átneveztem egy beszélgetést.</span></li>
+  </ul>
+</section>
+
+<section id="utmutatok" data-nav="Elérhető útmutatók" data-group="Segítség">
+  <h2>Elérhető útmutatók</h2>
+  <p class="sub">A chat kezdőképernyőjén a „… útmutató érhető el” lenyitva mindig az aktuális lista látszik.</p>
+  <div class="grid-3">
+    <div class="card"><b>☕ Kávégépek</b><ul><li>JURA Impressa S9</li><li>JURA Impressa S85</li><li>Saeco Royal Digital</li><li>Saeco Vienna</li><li>Y3.2 Iperespresso</li></ul></div>
+    <div class="card"><b>🍽️ Mosogatógépek</b><ul><li>Bosch SMV41D10EU</li><li>Electrolux ESI5201LOX</li><li>Gorenje GI52040X</li><li>Mosogatógép (általános)</li></ul></div>
+    <div class="card"><b>📺 Szórakoztató elektronika</b><ul><li>LG LED TV</li><li>Yettel TV-box</li><li>ALBRECHT DR 890 CD rádió</li><li>Hordozható lemezjátszó</li></ul></div>
+    <div class="card"><b>🔧 Egyéb eszközök</b><ul><li>HALOT-MAGE S 3D nyomtató</li><li>Hordozható (hőpapíros) nyomtató</li><li>GM-900 GSM/GPRS modem</li><li>DJI Osmo Mobile</li></ul></div>
+    <div class="card"><b>🚗 Járművek, játék</b><ul><li>Suzuki céges autó (használati szabályok)</li><li>RC Cheetah távirányítós autó</li></ul></div>
+    <div class="card"><b>📋 Egyéb</b><ul><li>Szülői felügyeleti eszközök katalógusa 2026</li></ul></div>
+  </div>
+</section>
+
+</div>
+
+    <div class="wrap"><footer class="foot">Útmutató-asszisztens – RAG a magyar használati útmutatókhoz · FastAPI · pgvector · React · Phoenix · OpenRouter</footer></div>
+  </main>
+</div>
+<div id="tip" role="tooltip"></div>
+<script>
+(function(){
+  const $ = (s, r=document) => r.querySelector(s), $$ = (s, r=document) => [...r.querySelectorAll(s)];
+  const store = {get(k){try{return localStorage.getItem(k)}catch(e){return null}}, set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+
+  // ---- téma
+  const saved = store.get('docs.theme'); if (saved) document.documentElement.dataset.theme = saved;
+  $('#themeBtn').onclick = () => {
+    const cur = document.documentElement.dataset.theme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    const next = cur === 'dark' ? 'light' : 'dark';
+    document.documentElement.dataset.theme = next; store.set('docs.theme', next);
+    window.dispatchEvent(new Event('themechange'));
+  };
+
+  // ---- bal oldali menü a szakaszokból
+  const toc = $('nav.toc'); let grp = null, n = 0;
+  $$('section[data-nav]').forEach(sec => {
+    const g = sec.dataset.group;
+    if (g && g !== grp) { grp = g; const d = document.createElement('div'); d.className = 'grp'; d.textContent = g; toc.appendChild(d); }
+    n++;
+    const a = document.createElement('a'); a.href = '#' + sec.id;
+    a.innerHTML = `<span class="n">${n}</span><span>${sec.dataset.nav}</span>` + (sec.dataset.time ? `<span class="t">${sec.dataset.time}</span>` : '');
+    a.onclick = () => document.body.classList.remove('nav-open');
+    toc.appendChild(a);
+    const h2 = sec.querySelector('h2'); if (h2 && !h2.querySelector('.num')) h2.insertAdjacentHTML('afterbegin', `<span class="num">${n}</span>`);
+  });
+  const links = $$('a', toc);
+  const io = new IntersectionObserver(es => es.forEach(e => {
+    if (e.isIntersecting) links.forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#' + e.target.id));
+  }), {rootMargin: '-30% 0px -60% 0px'});
+  $$('section[data-nav]').forEach(s => io.observe(s));
+  $('.side-search').addEventListener('input', e => {
+    const q = e.target.value.toLowerCase().trim();
+    links.forEach(l => l.classList.toggle('hidden', q && !l.textContent.toLowerCase().includes(q)));
+  });
+  addEventListener('scroll', () => {
+    const h = document.documentElement; $('#progress').style.width = (h.scrollTop / Math.max(1, h.scrollHeight - h.clientHeight) * 100) + '%';
+  }, {passive: true});
+
+  // ---- kódblokkok: fejléc (fájl + sorok) + másolás + kiemelés
+  $$('figure.code').forEach(f => {
+    const head = document.createElement('div'); head.className = 'code-head';
+    head.innerHTML = `<span class="dots"><i></i><i></i><i></i></span><span class="file"></span><span class="lines"></span><span class="ttl"></span><button type="button">Másolás</button>`;
+    head.querySelector('.file').textContent = f.dataset.file;
+    head.querySelector('.lines').textContent = f.dataset.lines + '. sor';
+    head.querySelector('.ttl').textContent = f.dataset.title ? '· ' + f.dataset.title : '';
+    f.prepend(head);
+    head.querySelector('button').onclick = async (ev) => {
+      try { await navigator.clipboard.writeText(f.querySelector('code').innerText); ev.target.textContent = 'Másolva ✓'; }
+      catch (e) { ev.target.textContent = 'Nem sikerült'; }
+      setTimeout(() => ev.target.textContent = 'Másolás', 1400);
+    };
+  });
+  if (window.hljs) $$('figure.code code').forEach(c => hljs.highlightElement(c));
+  $$('.cmd').forEach(c => {
+    const txt = c.textContent.trim(); c.innerHTML = ''; const s = document.createElement('span'); s.textContent = txt; c.appendChild(s);
+    const b = document.createElement('button'); b.type = 'button'; b.textContent = 'Másolás'; c.appendChild(b);
+    b.onclick = async () => { try { await navigator.clipboard.writeText(txt); b.textContent = '✓'; } catch (e) { b.textContent = '✗'; } setTimeout(() => b.textContent = 'Másolás', 1200); };
+  });
+
+  // ---- fülek
+  $$('.tabs').forEach(t => {
+    const btns = $$('.tab-btns button', t), panels = $$('.tab-panel', t);
+    const show = i => { btns.forEach((b, j) => b.classList.toggle('on', i === j)); panels.forEach((p, j) => p.classList.toggle('on', i === j)); };
+    btns.forEach((b, i) => b.onclick = () => show(i)); show(0);
+  });
+
+  // ---- lépésdiagram
+  $$('.pipeline').forEach(p => {
+    const steps = $$('.pstep', p), det = $('.pdetail', p);
+    const show = i => { steps.forEach((s, j) => s.classList.toggle('on', i === j)); det.innerHTML = steps[i].querySelector('template').innerHTML; };
+    steps.forEach((s, i) => s.onclick = () => show(i)); if (steps.length) show(0);
+  });
+
+  // ---- kattintható képernyő-makett (hotspot)
+  $$('.hotspot').forEach(h => {
+    // a makett fix 680 px széles, és a rendelkezésre álló helyhez méreteződik (zoom) -> a számozott pontok mindig a helyükön
+    const mock = $('.mock', h); const sc = document.createElement('div'); sc.className = 'mock-scroll'; mock.before(sc); sc.appendChild(mock);
+    const hots = $$('.hot', h), info = $('.hot-info', h);
+    // a pont a hozzá tartozó zóna bal felső sarkára kerül (a zóna tényleges helyéből számolva)
+    const place = () => {
+      const z = parseFloat(mock.style.zoom) || 1, mr = mock.getBoundingClientRect();
+      hots.forEach(x => {
+        const zone = mock.querySelector(`.zone[data-zone="${x.dataset.zone}"]`); if (!zone) return;
+        const r = zone.getBoundingClientRect();
+        x.style.left = Math.max(2, (r.left - mr.left) / z - 11) + 'px';
+        x.style.top = Math.max(2, (r.top - mr.top) / z - 11) + 'px';
+      });
+    };
+    // csak valódi szélességváltozásra méretez újra (a zoom a magasságot is változtatja – így nincs ResizeObserver-hurok)
+    let lastW = -1;
+    const fit = () => { const w = sc.clientWidth; if (w === lastW) return; lastW = w; mock.style.zoom = Math.min(1.15, w / 680); place(); };
+    fit(); new ResizeObserver(fit).observe(sc);
+    const texts = hots.map(x => { const t = x.querySelector('template'); return t ? t.innerHTML : ''; });
+    const show = i => {
+      hots.forEach((x, j) => x.classList.toggle('on', i === j));
+      $$('.zone', h).forEach(z => z.classList.toggle('lit', z.dataset.zone === hots[i].dataset.zone));
+      info.innerHTML = `<h4><span class="hn">${i + 1}</span>${hots[i].dataset.title}</h4><div class="hl">${texts[i]}</div>
+        <div class="hot-nav"><button type="button" data-d="-1">‹ Előző</button><button type="button" data-d="1">Következő ›</button><span style="margin-left:auto;font-size:12px;color:var(--muted)">${i + 1} / ${hots.length}</span></div>`;
+      $$('.hot-nav button', info).forEach(b => b.onclick = () => show((i + Number(b.dataset.d) + hots.length) % hots.length));
+    };
+    hots.forEach((x, i) => { x.textContent = i + 1; x.setAttribute('aria-label', x.dataset.title); x.onclick = () => show(i); });
+    if (hots.length) show(0);
+  });
+
+  // ---- tooltip az SVG-diagramokhoz
+  const tip = $('#tip');
+  document.addEventListener('mousemove', e => {
+    const el = e.target.closest && e.target.closest('[data-tip]');
+    if (!el) { tip.classList.remove('on'); return; }
+    tip.innerHTML = el.dataset.tip; tip.classList.add('on');
+    const x = Math.min(e.clientX + 14, innerWidth - tip.offsetWidth - 8), y = Math.max(8, e.clientY - tip.offsetHeight - 10);
+    tip.style.left = x + 'px'; tip.style.top = y + 'px';
+  });
+
+  // ---- szójegyzék-kereső
+  $$('.gloss-search').forEach(inp => inp.addEventListener('input', () => {
+    const q = inp.value.toLowerCase().trim();
+    $$('.gloss-item', inp.parentElement).forEach(g => g.classList.toggle('hidden', q && !g.textContent.toLowerCase().includes(q)));
+  }));
+
+  // ---- ellenőrzőlista (helyben megjegyzi)
+  $$('.checklist').forEach(cl => {
+    const key = 'docs.check.' + (cl.dataset.key || location.pathname);
+    let state = {}; try { state = JSON.parse(store.get(key) || '{}'); } catch (e) {}
+    const bar = cl.previousElementSibling && cl.previousElementSibling.classList.contains('check-progress') ? $('i', cl.previousElementSibling) : null;
+    const upd = () => { const boxes = $$('input', cl); const done = boxes.filter(b => b.checked).length; if (bar) bar.style.width = (done / boxes.length * 100) + '%'; };
+    $$('input', cl).forEach((b, i) => {
+      b.checked = !!state[i]; b.closest('li').classList.toggle('done', b.checked);
+      b.onchange = () => { state[i] = b.checked; b.closest('li').classList.toggle('done', b.checked); store.set(key, JSON.stringify(state)); upd(); };
+    });
+    upd();
+  });
+
+  // ---- three.js fejléc: lebegő "útmutató-lapok", amelyeket a keresés vonalai kötnek össze
+  const cv = $('#hero3d');
+  if (cv && window.THREE && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const r = new THREE.WebGLRenderer({canvas: cv, antialias: true, alpha: true});
+    r.setPixelRatio(Math.min(2, devicePixelRatio));
+    const scene = new THREE.Scene(), cam = new THREE.PerspectiveCamera(45, 1, .1, 100); cam.position.set(0, 0, 14);
+    const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+    const group = new THREE.Group(); scene.add(group);
+    const mats = [], pages = [];
+    const geo = new THREE.PlaneGeometry(1.1, 1.5);
+    for (let i = 0; i < 26; i++) {
+      const m = new THREE.MeshBasicMaterial({color: i % 5 === 0 ? css('--accent-2') : css('--accent'), transparent: true, opacity: .16 + Math.random() * .22, side: THREE.DoubleSide});
+      mats.push(m);
+      const p = new THREE.Mesh(geo, m);
+      const a = Math.random() * Math.PI * 2, rad = 3 + Math.random() * 6;
+      p.position.set(Math.cos(a) * rad + 3, (Math.random() - .5) * 7, Math.sin(a) * rad - 4);
+      p.rotation.set(Math.random(), Math.random(), Math.random());
+      p.userData = {s: .2 + Math.random() * .5, o: Math.random() * 6};
+      group.add(p); pages.push(p);
+    }
+    const lineMat = new THREE.LineBasicMaterial({color: css('--accent'), transparent: true, opacity: .22});
+    const pts = [];
+    pages.forEach((p, i) => { const q = pages[(i * 7 + 3) % pages.length]; pts.push(p.position.clone(), q.position.clone()); });
+    const lines = new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints(pts), lineMat); group.add(lines);
+    const resize = () => { const w = cv.clientWidth, h = cv.clientHeight; r.setSize(w, h, false); cam.aspect = w / Math.max(1, h); cam.updateProjectionMatrix(); };
+    resize(); addEventListener('resize', resize);
+    addEventListener('themechange', () => { mats.forEach((m, i) => m.color.set(i % 5 === 0 ? css('--accent-2') : css('--accent'))); lineMat.color.set(css('--accent')); });
+    let mx = 0, my = 0, visible = true;
+    addEventListener('mousemove', e => { mx = e.clientX / innerWidth - .5; my = e.clientY / innerHeight - .5; });
+    new IntersectionObserver(es => visible = es[0].isIntersecting).observe(cv);
+    const clock = new THREE.Clock();
+    (function loop() {
+      requestAnimationFrame(loop); if (!visible) return;
+      const t = clock.getElapsedTime();
+      group.rotation.y = t * .05 + mx * .4; group.rotation.x = my * .2;
+      pages.forEach(p => { p.rotation.y += .002 * p.userData.s * 4; p.position.y += Math.sin(t * p.userData.s + p.userData.o) * .002; });
+      r.render(scene, cam);
+    })();
+  }
+})();
+</script>
+</body>
+</html>

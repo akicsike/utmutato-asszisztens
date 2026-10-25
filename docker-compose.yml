@@ -1,0 +1,115 @@
+name: utmutato
+
+x-backend: &backend
+  build:
+    context: .
+    dockerfile: backend/Dockerfile
+  image: utmutato-backend:latest   # az api és a worker ugyanazt az image-et használja (egyszer épül)
+  restart: unless-stopped
+  env_file: .env
+  environment:
+    POSTGRES_HOST: postgres
+    POSTGRES_PORT: "5432"
+    STORE_PATH: /data/store
+    SEED_PATH: /data/seed
+    HF_HOME: /models/hf
+    PHOENIX_ENDPOINT: http://phoenix:6006/v1/traces
+  volumes:
+    # beolvasott tartalom (eredeti PDF-ek, Docling JSON, Markdown, képek) – a hoston is böngészhető
+    - ${STORE_HOST_PATH:-./data/store}:/data/store
+    # a kezdő útmutatók mappája (a projekt hasznalati_utmutatok mappája) CSAK OLVASHATÓAN – admin: "Kezdő mappa importálása"
+    - ${SEED_HOST_PATH:-./hasznalati_utmutatok}:/data/seed:ro
+    # Docling layout-modellek + a chunk-tokenizáló (első futáskor töltődik le, egyszer)
+    - hf_models:/models
+    # mérési kérdéssorok és eredmények
+    - ./eval:/eval
+  depends_on:
+    postgres:
+      condition: service_healthy
+
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    ports:
+      - "${HOST_BIND:-0.0.0.0}:${POSTGRES_PORT:-5470}:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      retries: 20
+
+  # HTTP API: chat (SSE), beszélgetések, visszajelzés, fájlok és képek, admin – és a lefordított React UI.
+  api:
+    <<: *backend
+    command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+    ports:
+      - "${HOST_BIND:-0.0.0.0}:${API_PORT:-8070}:8000"
+
+  # Háttér-worker: beolvasási sor (Docling + OCR -> képek -> chunkolás + embedding).
+  worker:
+    <<: *backend
+    command: ["python", "-m", "app.worker"]
+
+  # LLM-nyomkövetés: kérdésenként átírás -> keresés -> rerank -> válasz, tokenek, költség, idők.
+  phoenix:
+    image: arizephoenix/phoenix:${PHOENIX_VERSION:-version-20.16.0}
+    restart: unless-stopped
+    environment:
+      PHOENIX_SQL_DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      PHOENIX_SQL_DATABASE_SCHEMA: phoenix   # külön séma, ne keveredjen a saját tábláinkkal
+      PHOENIX_WORKING_DIR: /data
+    volumes:
+      - phoenix_data:/data
+    ports:
+      - "${HOST_BIND:-0.0.0.0}:${PHOENIX_PORT:-6070}:6006"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  # Postgres böngésző (opcionális): docker compose --profile tools up -d adminer
+  adminer:
+    image: adminer:5
+    profiles: ["tools"]
+    restart: unless-stopped
+    environment:
+      ADMINER_DEFAULT_SERVER: postgres
+    ports:
+      - "${HOST_BIND:-0.0.0.0}:${ADMINER_PORT:-8071}:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  # Promptfoo (opcionális): funkcionális teszt + red team a valódi /api/chat ellen, a belső hálózaton.
+  # A kulcsot a .env-ből kapja (OPENROUTER_API_KEY) – Node a hoston nem kell. Lásd: promptfoo/README.md
+  #   docker compose --profile tools run --rm promptfoo eval -c promptfooconfig.yaml --no-cache -o results/eval.html
+  promptfoo:
+    image: node:22-bookworm-slim
+    profiles: ["tools"]
+    env_file: .env
+    environment:
+      PROMPTFOO_DISABLE_TELEMETRY: "1"
+      PROMPTFOO_DISABLE_UPDATE: "1"
+      # a támadásokat a saját modellünk (gpt-4o-mini) generálja, nem a Promptfoo felhős szolgáltatása
+      PROMPTFOO_DISABLE_REMOTE_GENERATION: "true"
+      PROMPTFOO_CONFIG_DIR: /work/.promptfoo
+      NPM_CONFIG_UPDATE_NOTIFIER: "false"
+    working_dir: /work
+    volumes:
+      - ./promptfoo:/work
+      - promptfoo_npm:/root/.npm          # az npx-letöltés gyorsítótára (második futástól gyors)
+    entrypoint: ["npx", "-y", "promptfoo@0.125.1"]
+    depends_on:
+      api:
+        condition: service_started
+
+volumes:
+  promptfoo_npm:
+  pg_data:
+  hf_models:
+  phoenix_data:
